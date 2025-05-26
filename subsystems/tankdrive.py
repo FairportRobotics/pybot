@@ -14,24 +14,24 @@ class TankDrive(commands2.SubsystemBase):
         if motor_type == "TalonSRX":
             import ctre
 
-            self.left_main = ctre.WPI_TalonSRX(constants.CAN_LEFT_DRIVE_MOTOR_1)
-            self.left_follower = ctre.WPI_TalonSRX(constants.CAN_LEFT_DRIVE_MOTOR_2)
-            self.right_main = ctre.WPI_TalonSRX(constants.CAN_RIGHT_DRIVE_MOTOR_1)
-            self.right_follower = ctre.WPI_TalonSRX(constants.CAN_RIGHT_DRIVE_MOTOR_1)
+            self.left_front = ctre.WPI_TalonSRX(constants.LEFT_FRONT_DRIVE_MOTOR_CAN_BUS_ID)
+            self.left_rear = ctre.WPI_TalonSRX(constants.LEFT_REAR_DRIVE_MOTOR_CAN_BUS_ID)
+            self.right_front = ctre.WPI_TalonSRX(constants.RIGHT_FRONT_DRIVE_MOTOR_CAN_BUS_ID)
+            self.right_rear = ctre.WPI_TalonSRX(constants.RIGHT_REAR_DRIVE_MOTOR_CAN_BUS_ID)
         elif motor_type == "SparkMax":
             import rev
 
-            self.left_main = rev.CANSparkMax(
-                constants.CAN_LEFT_DRIVE_MOTOR_1, rev.MotorType.kBrushless
+            self.left_front = rev.CANSparkMax(
+                constants.LEFT_FRONT_DRIVE_MOTOR_CAN_BUS_ID, rev.MotorType.kBrushless
             )
-            self.left_follower = rev.CANSparkMax(
-                constants.CAN_LEFT_DRIVE_MOTOR_2, rev.MotorType.kBrushless
+            self.left_rear = rev.CANSparkMax(
+                constants.LEFT_REAR_DRIVE_MOTOR_CAN_BUS_ID, rev.MotorType.kBrushless
             )
-            self.right_main = rev.CANSparkMax(
-                constants.CAN_RIGHT_DRIVE_MOTOR_1, rev.MotorType.kBrushless
+            self.right_front = rev.CANSparkMax(
+                constants.RIGHT_FRONT_DRIVE_MOTOR_CAN_BUS_ID, rev.MotorType.kBrushless
             )
-            self.right_follower = rev.CANSparkMax(
-                constants.CAN_RIGHT_DRIVE_MOTOR_2, rev.MotorType.kBrushless
+            self.right_rear = rev.CANSparkMax(
+                constants.RIGHT_REAR_DRIVE_MOTOR_CAN_BUS_ID, rev.MotorType.kBrushless
             )
         else:
             raise ValueError(f"Unsupported motor type: {motor_type}")
@@ -45,8 +45,8 @@ class TankDrive(commands2.SubsystemBase):
         else:
             left = -left
 
-        self.left_main.set(left)
-        self.left_follower.set(left)
+        self.left_front.set(left)
+        self.left_rear.set(left)
 
-        self.right_main.set(right)
-        self.right_follower.set(right)
+        self.right_front.set(right)
+        self.right_rear.set(right)
