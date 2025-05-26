@@ -9,9 +9,10 @@ class RobotContainer:
         self.controller = subsystems.Controller(
             controller_type=constants.CONTROLLER_TYPE
         )
-        if constants.DRIVETRAIN_TYPE == "tank":
+        drivetrain_type = constants.DRIVETRAIN_TYPE.lower()
+        if drivetrain_type == "tank":
             self.drive = subsystems.TankDrive()
-        elif constants.DRIVETRAIN_TYPE == "swerve":
+        elif drivetrain_type == "swerve":
             self.drive = subsystems.SwerveDrive()
         # self.elevator = subsystems.Elevator()
         # self.feeder = subsystems.Feeder()
