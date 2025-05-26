@@ -1,3 +1,5 @@
+# What type of drivetrain is being used
+# Valid options are "tank" and "swerve"
 DRIVETRAIN_TYPE = "tank"
 
 # CAN bus ids
