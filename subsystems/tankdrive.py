@@ -14,10 +14,18 @@ class TankDrive(commands2.SubsystemBase):
         if motor_type == "TalonSRX":
             import ctre
 
-            self.left_front = ctre.WPI_TalonSRX(constants.LEFT_FRONT_DRIVE_MOTOR_CAN_BUS_ID)
-            self.left_rear = ctre.WPI_TalonSRX(constants.LEFT_REAR_DRIVE_MOTOR_CAN_BUS_ID)
-            self.right_front = ctre.WPI_TalonSRX(constants.RIGHT_FRONT_DRIVE_MOTOR_CAN_BUS_ID)
-            self.right_rear = ctre.WPI_TalonSRX(constants.RIGHT_REAR_DRIVE_MOTOR_CAN_BUS_ID)
+            self.left_front = ctre.WPI_TalonSRX(
+                constants.LEFT_FRONT_DRIVE_MOTOR_CAN_BUS_ID
+            )
+            self.left_rear = ctre.WPI_TalonSRX(
+                constants.LEFT_REAR_DRIVE_MOTOR_CAN_BUS_ID
+            )
+            self.right_front = ctre.WPI_TalonSRX(
+                constants.RIGHT_FRONT_DRIVE_MOTOR_CAN_BUS_ID
+            )
+            self.right_rear = ctre.WPI_TalonSRX(
+                constants.RIGHT_REAR_DRIVE_MOTOR_CAN_BUS_ID
+            )
         elif motor_type == "SparkMax":
             import rev
 

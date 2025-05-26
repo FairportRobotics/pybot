@@ -119,7 +119,7 @@ class Controller(commands2.Subsystem):
         """
         Get the x-axis value of the right stick.
         """
-        return self.get_stick(constants.RIGHT_JOYSTICK_X , "right_x")
+        return self.get_stick(constants.RIGHT_JOYSTICK_X, "right_x")
 
     def get_right_stick_y(self) -> float:
         """
