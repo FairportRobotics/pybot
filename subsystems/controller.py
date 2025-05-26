@@ -107,31 +107,31 @@ class Controller(commands2.Subsystem):
         """
         Get the x-axis value of the left stick.
         """
-        return self.get_stick(constants.JOYSTICK_LEFT_X, "left_x")
+        return self.get_stick(constants.LEFT_JOYSTICK_X, "left_x")
 
     def get_left_stick_y(self) -> float:
         """
         Get the y-axis value of the left stick.
         """
-        return self.get_stick(constants.JOYSTICK_LEFT_Y, "left_y")
+        return self.get_stick(constants.LEFT_JOYSTICK_Y, "left_y")
 
     def get_right_stick_x(self) -> float:
         """
         Get the x-axis value of the right stick.
         """
-        return self.get_stick(constants.JOYSTICK_RIGHT_X, "right_x")
+        return self.get_stick(constants.RIGHT_JOYSTICK_X , "right_x")
 
     def get_right_stick_y(self) -> float:
         """
         Get the y-axis value of the right stick.
         """
-        return self.get_stick(constants.JOYSTICK_RIGHT_Y, "right_y")
+        return self.get_stick(constants.RIGHT_JOYSTICK_Y, "right_y")
 
     def get_stick(self, axis: int, drift_key: str) -> float:
         """
         Generalized function to read the X or y-axis of either the left or right stick and apply drift compensation.
 
-        :param axis: The axis to read (e.g., JOYSTICK_LEFT_X, JOYSTICK_LEFT_Y, etc.)
+        :param axis: The axis to read (e.g., LEFT_JOYSTICK_X, LEFT_JOYSTICK_Y, etc.)
         :param drift_key: The key for the drift compensation value.
         :return: The compensated stick value.
         """
