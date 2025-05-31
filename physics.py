@@ -1,25 +1,37 @@
-from pyfrc.physics import drivetrains
+from pyfrc.physics.tankmodel import TankModel
+from pyfrc.physics.units import units
+from pyfrc.physics import motor_cfgs
+
 
 class PhysicsEngine:
     def __init__(self, physics_controller):
         self.physics_controller = physics_controller
-
-        self.drivetrain = drivetrains.TankModel.theory(
-            motor_left=2,
-            motor_right=2,
-            robot_mass=110,       # in pounds
-            gear_ratio=10.71,
-            wheelbase=2.0,        # in feet
-            robot_width=3.0,      # in feet
-            robot_length=3.0,     # in feet
-            wheel_diameter=0.5    # in feet (6-inch wheels)
+        # create a tank model
+        self.tank_model = TankModel.theory(
+            motor_config=motor_cfgs.MOTOR_CFG_CIM,
+            robot_mass=(90 * units.lbs),
+            # wheel_radius= (3*units.inch),
+            gearing=10.71,
+            robot_length=(30 * units.inch),
+            robot_width=(24 * units.inch),
         )
 
-    def update_sim(self, hal_data, now, tm_diff):
-        # Get left and right motor outputs (from arcadeDrive)
-        l_motor = hal_data["pwm"][0]["value"]  # Left motor (PWM 0)
-        r_motor = hal_data["pwm"][1]["value"]  # Right motor (PWM 1)
+        # initial position
+        self.x = 0
+        self.y = 0
+        self.heading = 0
 
-        # Calculate position update
-        x, y, angle = self.drivetrain.calculate(l_motor, r_motor, tm_diff)
-        self.physics_controller.drive.set_pose(x, y, angle)
+    def update_sim(self, now, tm_diff):
+        """
+        # update the motors
+        l_motor = self.physics_controller.get_motor(1)
+        r_motor = self.physics_controller.get_motor(2)
+
+        # get the robot velocity
+        l_vel, r_vel = self.tank_model.get_wheel_velocities(l_motor, r_motor)
+        velocity, angular_velocity = self.tank_model.get_vector(l_motor, r_motor, tm_diff)
+
+        # update the position
+        self.x, self.y, self.heading = self.physics_controller.move_robot(self.x, self.y, self.heading, velocity, angular_velocity, tm_diff)
+        """
+        pass

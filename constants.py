@@ -13,3 +13,6 @@ LEFT_FRONT_MOTOR_PORT = 0
 LEFT_BACK_MOTOR_PORT = 1
 RIGHT_FRONT_MOTOR_PORT = 2
 RIGHT_BACK_MOTOR_PORT = 3
+
+# The keys are the elevator levels, and the values are the heights in inches.
+ELEVATOR_LEVELS = {0: 0, 1: 12, 2: 48, 3: 56, 4: 72}

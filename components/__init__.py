@@ -1,4 +1,5 @@
 from .climber import Climber
+from .controller import XboxController
 from .drivetrain import ArcadeDrive, TankDrive, SwerveDrive
 from .elevator import Elevator
 from .feeder import Feeder
@@ -14,4 +15,5 @@ __all__ = [
     "TankDrive",
     "Shooter",
     "SwerveDrive",
+    "XboxController",
 ]

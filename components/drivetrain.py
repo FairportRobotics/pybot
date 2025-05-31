@@ -4,8 +4,8 @@ import wpilib.drive
 
 
 class ArcadeDrive:
-    left_front_motor: wpilib.PWMTalonSRX
-    right_front_motor: wpilib.PWMTalonSRX
+    left_motor: wpilib.MotorControllerGroup
+    right_motor: wpilib.MotorControllerGroup
     speed = magicbot.tunable(0.0)
 
     def execute(self) -> None:
@@ -15,9 +15,7 @@ class ArcadeDrive:
         """
         Set up the arcade drive with the specified motors.
         """
-        self.drive = wpilib.drive.DifferentialDrive(
-            self.left_front_motor, self.right_front_motor
-        )
+        self.drive = wpilib.drive.DifferentialDrive(self.left_motor, self.right_motor)
 
     def go(self, forward: float, rotation: float) -> None:
         """
@@ -53,8 +51,8 @@ class SwerveDrive:
 
 
 class TankDrive:
-    left_front_motor: wpilib.PWMTalonSRX
-    right_front_motor: wpilib.PWMTalonSRX
+    left_motor: wpilib.MotorControllerGroup
+    right_motor: wpilib.MotorControllerGroup
     speed = magicbot.tunable(0.0)
 
     def execute(self) -> None:
@@ -64,9 +62,7 @@ class TankDrive:
         """
         Set up the arcade drive with the specified motors.
         """
-        self.drive = wpilib.drive.DifferentialDrive(
-            self.left_front_motor, self.right_front_motor
-        )
+        self.drive = wpilib.drive.DifferentialDrive(self.left_motor, self.right_motor)
 
     def go(self, left: float, right: float) -> None:
         """

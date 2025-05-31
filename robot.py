@@ -10,9 +10,10 @@ if constants.MODE == "simulation":
     os.environ["HALSIMXRP_PORT"] = "3540"
 
 
-class MyRobot(magicbot.MagicRobot):
+class Robot(magicbot.MagicRobot):
     # List all the components used by the robot
     climber: components.Climber
+    controller: components.XboxController
     # Set up the drive based on the drivetrain type specified in constants.py
     drivetrain_type = constants.DRIVETRAIN_TYPE.lower()  # Ensure it's lowercase
     if drivetrain_type == "arcade":
@@ -31,36 +32,41 @@ class MyRobot(magicbot.MagicRobot):
     # List what we want to see in the network tables
 
     def createObjects(self):
-        # This is where we initialize the motors and other hardware objects to pass into the components
-
         # Controller
-        self.controller = wpilib.XboxController(constants.CONTROLLER_PORT)
+        self.xbox_controller = wpilib.XboxController(constants.CONTROLLER_PORT)
 
         # Drivetrain motors
-        self.left_front_motor = wpilib.PWMTalonSRX(constants.LEFT_FRONT_MOTOR_PORT)
-        self.left_back_motor = wpilib.PWMTalonSRX(constants.LEFT_BACK_MOTOR_PORT)
-        self.right_front_motor = wpilib.PWMTalonSRX(constants.RIGHT_FRONT_MOTOR_PORT)
-        self.right_back_motor = wpilib.PWMTalonSRX(constants.RIGHT_BACK_MOTOR_PORT)
+        self.left_front_motor = wpilib.PWMSparkMax(constants.LEFT_FRONT_MOTOR_PORT)
+        self.left_back_motor = wpilib.PWMSparkMax(constants.LEFT_BACK_MOTOR_PORT)
+        self.right_front_motor = wpilib.PWMSparkMax(constants.RIGHT_FRONT_MOTOR_PORT)
+        self.right_back_motor = wpilib.PWMSparkMax(constants.RIGHT_BACK_MOTOR_PORT)
+        # Let's group the motors together as a single "motor"
+        self.left_motor = wpilib.MotorControllerGroup(
+            self.left_front_motor, self.left_back_motor
+        )
+        self.right_motor = wpilib.MotorControllerGroup(
+            self.right_front_motor, self.right_back_motor
+        )
+        # Invert left side so it goes forward when the joystick is pushed forward
+        self.left_motor.setInverted(True)
 
-        self.elevator_levels = {0: 0, 1: 12, 2: 48, 3: 56}
+        # Elevator Heights
+        self.elevator_levels = constants.ELEVATOR_LEVELS
 
     def teleopPeriodic(self):
         # Get the input from the controller
-        self.left_joystick_y = round(self.controller.getLeftY(), 1)
-        self.left_joystick_x = round(self.controller.getLeftX(), 1)
-        self.right_joystick_x = round(self.controller.getRightX(), 1)
-        self.right_joystick_y = round(self.controller.getRightY(), 1)
-        if self.drivetrain_type == "arcade":
-            self.drive.go(-self.left_joystick_y, -self.right_joystick_x)
-        elif self.drivetrain_type == "tank":
-            self.drive.go(-self.left_joystick_y, -self.right_joystick_y)
+        left_x, left_y, right_x, right_y = self.controller.get_joysticks()
+        if self.drivetrain_type in ["arcade", "tank"]:
+            self.drive.go(left_y, right_y)
         elif self.drivetrain_type == "swerve":
-            self.drive.go(
-                -self.left_joystick_x, -self.left_joystick_y, -self.right_joystick_x
-            )
+            self.drive.go(left_x, left_y, right_x)
 
-        if self.controller.getPOV() == 0:
-            self.elevator.move_to(self.elevator.get_level() + 1)
+        if self.controller.dpad_up():
+            self.elevator.move_to(self.elevator.get_current_level() + 1)
 
-        elif self.controller.getPOV() == 180:
-            self.elevator.move_to(self.elevator.get_level() - 1)
+        elif self.controller.dpad_down():
+            self.elevator.move_to(self.elevator.get_current_level() - 1)
+
+
+if __name__ == "__main__":
+    wpilib.run(Robot)
