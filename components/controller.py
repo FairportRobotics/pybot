@@ -92,3 +92,51 @@ class XboxController:
         :return: True if the D-pad is pressed right, False otherwise.
         """
         return self.xbox_controller.getPOV() == 90
+
+    def left_bumper(self) -> bool:
+        """
+        Check if the left bumper is pressed.
+
+        :return: True if the left bumper is pressed, False otherwise.
+        """
+        return self.xbox_controller.getLeftBumper()
+
+    def right_bumper(self) -> bool:
+        """
+        Check if the right bumper is pressed.
+
+        :return: True if the right bumper is pressed, False otherwise.
+        """
+        return self.xbox_controller.getRightBumper()
+
+    def left_trigger(self) -> float:
+        """
+        Get the value of the left trigger.
+
+        :return: The value of the left trigger, ranging from 0.0 to 1.0.
+        """
+        return self.xbox_controller.getLeftTriggerAxis()
+
+    def right_trigger(self) -> float:
+        """
+        Get the value of the right trigger.
+
+        :return: The value of the right trigger, ranging from 0.0 to 1.0.
+        """
+        return self.xbox_controller.getRightTriggerAxis()
+
+    def start_button(self) -> bool:
+        """
+        Check if the start button is pressed.
+
+        :return: True if the start button is pressed, False otherwise.
+        """
+        return self.xbox_controller.getStartButton()
+
+    def back_button(self) -> bool:
+        """
+        Check if the back button is pressed.
+
+        :return: True if the back button is pressed, False otherwise.
+        """
+        return self.xbox_controller.getBackButton()

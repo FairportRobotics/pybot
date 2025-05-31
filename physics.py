@@ -6,14 +6,14 @@ from pyfrc.physics import motor_cfgs
 class PhysicsEngine:
     def __init__(self, physics_controller):
         self.physics_controller = physics_controller
+
         # create a tank model
         self.tank_model = TankModel.theory(
             motor_config=motor_cfgs.MOTOR_CFG_CIM,
-            robot_mass=(90 * units.lbs),
-            # wheel_radius= (3*units.inch),
+            robot_mass=(115 * units.lbs),
             gearing=10.71,
-            robot_length=(30 * units.inch),
-            robot_width=(24 * units.inch),
+            robot_length=(28 * units.inch),
+            robot_width=(28 * units.inch),
         )
 
         # initial position
