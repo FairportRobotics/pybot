@@ -1,6 +1,7 @@
 import magicbot
 import constants
 import components
+import wpilib
 
 
 class Robot(magicbot.MagicRobot):
