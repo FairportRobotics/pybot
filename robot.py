@@ -1,5 +1,6 @@
 import magicbot
 import constants
+import components
 
 
 class Robot(magicbot.MagicRobot):
