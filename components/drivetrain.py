@@ -24,10 +24,10 @@ class ArcadeDrive:
         :param forward: The forward speed.
         :param rotation: The rotation speed.
         """
-        pass
+        self.drive.arcadeDrive(forward, rotation, squareInputs=True)
 
     def stop(self) -> None:
-        pass
+        self.drive.stopMotor()
 
 
 class SwerveDrive:
