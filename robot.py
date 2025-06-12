@@ -1,7 +1,7 @@
 import constants
 import components
 import magicbot
-import phoenix5
+#import phoenix5
 import wpilib
 
 
@@ -18,8 +18,6 @@ class Robot(magicbot.MagicRobot):
         drive: components.SwerveDrive
     else:
         raise ValueError(f"Unknown drivetrain type: {drivetrain_type}")
-    
-
     # List what we want to see in the network tables
 
     def createObjects(self):
@@ -34,6 +32,7 @@ class Robot(magicbot.MagicRobot):
         self.right_front_motor = wpilib.Jaguar(constants.RIGHT_FRONT_MOTOR_PORT)
         self.right_back_motor = wpilib.Jaguar(constants.RIGHT_BACK_MOTOR_PORT)
         #Might Work
+        '''
         self.left_front_motor = wpilib.PWMSparkMax(constants.LEFT_FRONT_MOTOR_PORT)
         self.left_back_motor = wpilib.PWMSparkMax(constants.LEFT_BACK_MOTOR_PORT)
         self.right_front_motor = wpilib.PWMSparkMax(constants.RIGHT_FRONT_MOTOR_PORT)
@@ -43,7 +42,7 @@ class Robot(magicbot.MagicRobot):
         self.left_back_motor = phoenix5.WPI_TalonSRX(constants.LEFT_BACK_MOTOR_PORT)
         self.right_front_motor = phoenix5.WPI_TalonSRX(constants.RIGHT_FRONT_MOTOR_PORT)
         self.right_back_motor = phoenix5.WPI_TalonSRX(constants.RIGHT_BACK_MOTOR_PORT)
-        
+        #'''
         # Let's group the motors together as a single "motor"
         self.left_motor = wpilib.MotorControllerGroup(
             self.left_front_motor, self.left_back_motor
