@@ -1,7 +1,7 @@
 import constants
 import components
 import magicbot
-#import phoenix5
+import phoenix5
 import wpilib
 
 
@@ -25,32 +25,18 @@ class Robot(magicbot.MagicRobot):
         self.xbox_controller = wpilib.XboxController(constants.CONTROLLER_PORT)
 
         # Drivetrain motors
-        '''
-        #Doesn't work
-        self.left_front_motor = wpilib.Jaguar(constants.LEFT_FRONT_MOTOR_PORT)
-        self.left_back_motor = wpilib.Jaguar(constants.LEFT_BACK_MOTOR_PORT)
-        self.right_front_motor = wpilib.Jaguar(constants.RIGHT_FRONT_MOTOR_PORT)
-        self.right_back_motor = wpilib.Jaguar(constants.RIGHT_BACK_MOTOR_PORT)
-        #Might Work
-        '''
-        self.left_front_motor = wpilib.PWMSparkMax(constants.LEFT_FRONT_MOTOR_PORT)
-        self.left_back_motor = wpilib.PWMSparkMax(constants.LEFT_BACK_MOTOR_PORT)
-        self.right_front_motor = wpilib.PWMSparkMax(constants.RIGHT_FRONT_MOTOR_PORT)
-        self.right_back_motor = wpilib.PWMSparkMax(constants.RIGHT_BACK_MOTOR_PORT)
-        '''
         self.left_front_motor = phoenix5.WPI_TalonSRX(constants.LEFT_FRONT_MOTOR_PORT)
         self.left_back_motor = phoenix5.WPI_TalonSRX(constants.LEFT_BACK_MOTOR_PORT)
         self.right_front_motor = phoenix5.WPI_TalonSRX(constants.RIGHT_FRONT_MOTOR_PORT)
         self.right_back_motor = phoenix5.WPI_TalonSRX(constants.RIGHT_BACK_MOTOR_PORT)
-        #'''
-        # Let's group the motors together as a single "motor"
+        ## Let's group the motors together as a single "motor"
         self.left_motor = wpilib.MotorControllerGroup(
             self.left_front_motor, self.left_back_motor
         )
         self.right_motor = wpilib.MotorControllerGroup(
             self.right_front_motor, self.right_back_motor
         )
-        # Invert left side so it goes forward when the joystick is pushed forward
+        ## Invert left side so it goes forward when the joystick is pushed forward
         self.left_motor.setInverted(True)
 
 
