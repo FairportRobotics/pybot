@@ -1,4 +1,3 @@
-
 #
 # See the documentation for more details on how this works
 #
@@ -80,4 +79,3 @@ class PhysicsEngine:
         transform = self.drivetrain.calculate(l_motor, r_motor, tm_diff)
         pose = self.physics_controller.move_robot(transform)
         """
-
