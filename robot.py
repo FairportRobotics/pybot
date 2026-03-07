@@ -16,16 +16,7 @@ class MyRobot(magicbot.MagicRobot):
         pass
 
     def teleopPeriodic(self) -> None:
-        led_mode = self.LED.get_mode()
-
-        if led_mode == "green":
-            self.LED.green()
-        elif led_mode == "red":
-            self.LED.red()
-        elif led_mode == "rainbow":
-            self.LED.rainbow()
-        else:
-            self.LED.turn_off()
+        pass
 
     def disabledInit(self) -> None:
         pass

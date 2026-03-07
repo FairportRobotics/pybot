@@ -6,7 +6,19 @@ class LED:
     length: int
 
     def execute(self):
-        pass
+        # Get the mode from the Network Tables
+        led_mode = self.get_mode()
+        # Change the LED mode based on the value
+        if led_mode == "blue":
+            self.blue()
+        elif led_mode == "green":
+            self.green()
+        elif led_mode == "red":
+            self.red()
+        elif led_mode == "rainbow":
+            self.rainbow()
+        else:
+            self.turn_off()
 
     def setup(self) -> None:
         self.led = AddressableLED(self.pwm_port)
@@ -24,19 +36,28 @@ class LED:
     # CONTROL METHODS
     # =========================================================================
 
-    def _set_RGB(self, r, g, b):
-        for i in range(self.length):
-            self.buffer[i].setRGB(r, g, b)
-        self.led.setData(self.buffer)
-        self.led.start()
+    def blue(self):
+        """
+        Turn the LEDs blue
+        """
+        self.set_RGB(0, 0, 255)
 
     def green(self):
-        self._set_RGB(0, 255, 0)  # R=0, G=255, B=0
+        """
+        Turn the LEDs geen
+        """
+        self.set_RGB(0, 255, 0)
 
     def red(self):
-        self._set_RGB(255, 0, 0)  # R=255, G=0, B=0
+        """
+        Turn the LEDs red
+        """
+        self.set_RGB(255, 0, 0)
 
     def rainbow(self):
+        """
+        Produce a rainbow effect
+        """
         # For every pixel
         for i in range(self.length):
             # Calculate the hue
@@ -52,11 +73,26 @@ class LED:
         self.led.setData(self.buffer)
         self.led.start()
 
+    def set_mode(self, mode: str) -> None:
+        """
+        Write the LED mode to Network Tables
+        """
+        SmartDashboard.putString("LED Mode", mode)
+
+    def set_RGB(self, r, g, b):
+        """
+        Set the RGB values for the
+        """
+        for i in range(self.length):
+            self.buffer[i].setRGB(r, g, b)
+        self.led.setData(self.buffer)
+        self.led.start()
+
     def turn_off(self) -> None:
         """
-        Turn the LED off.
+        Turns the LEDs off.
         """
-        self._set_RGB(0, 0, 0)
+        self.set_RGB(0, 0, 0)
 
     # =========================================================================
     # INFORMATIONAL METHODS
