@@ -1,19 +1,19 @@
 import components
 import constants
-import magicbot
+from magicbot import MagicRobot
 
 
-class MyRobot(magicbot.MagicRobot):
-    CONTROLLER: components.XboxController
+class MyRobot(MagicRobot):
     LED: components.LED
     LOGGER: components.Lumberjack
+    MAIN_CONTROLLER: components.XboxController
 
     def createObjects(self):
         """Create motors and stuff here"""
         # Controller stuff here
-        self.CONTROLLER_CORRECT_FOR_DEADBAND = constants.CONTROLLER_CORRECT_FOR_DEADBAND
-        self.CONTROLLER_DEADBAND = constants.CONTROLLER_DEADBAND
-        self.CONTROLLER_PORT = constants.CONTROLLER_PORT
+        self.MAIN_CONTROLLER_CORRECT_FOR_DEADBAND = constants.CONTROLLER_CORRECT_FOR_DEADBAND
+        self.MAIN_CONTROLLER_DEADBAND = constants.CONTROLLER_DEADBAND
+        self.MAIN_CONTROLLER_PORT = constants.CONTROLLER_PORT
         # LED stuff here
         self.LED_length = constants.LED_LENGTH
         self.LED_pwm_port = constants.LED_PWM_PORT
@@ -23,8 +23,8 @@ class MyRobot(magicbot.MagicRobot):
         pass
 
     def teleopPeriodic(self):
-        self.CONTROLLER.capture_button_presses()
-        left_x, left_y, right_x, right_y = self.CONTROLLER.get_joysticks()
+        self.MAIN_CONTROLLER.capture_button_presses()
+        left_x, left_y, right_x, right_y = self.MAIN_CONTROLLER.get_joysticks()
 
     def disabledInit(self):
         pass
