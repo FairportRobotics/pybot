@@ -2,7 +2,6 @@ from typing import Tuple
 
 
 class Localization:
-
     def setup(self):
         pass
 

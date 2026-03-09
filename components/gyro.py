@@ -1,5 +1,26 @@
+from navx import AHRS
 from phoenix6.hardware import Pigeon2
 from wpimath.geometry import Rotation2d
+from wpilib.SPI.Port import kMXP
+
+
+class NavX2:
+    SPI_PORT: kMXP
+
+    def setup(self):
+        self.navx = AHRS(self.SPI_PORT)
+        self.navx.reset()
+
+    def get_heading(self):
+        # Returns yaw (rotation around Z axis)
+        return self.navx.getYaw()
+
+    def reset_heading(self):
+        self.navx.reset()
+
+    def execute(self):
+        pass
+
 
 class Pigeon:
     # MagicBot will inject this from the Robot class

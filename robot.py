@@ -11,7 +11,9 @@ class MyRobot(MagicRobot):
     def createObjects(self):
         """Create motors and stuff here"""
         # Controller stuff here
-        self.MAIN_CONTROLLER_CORRECT_FOR_DEADBAND = constants.CONTROLLER_CORRECT_FOR_DEADBAND
+        self.MAIN_CONTROLLER_CORRECT_FOR_DEADBAND = (
+            constants.CONTROLLER_CORRECT_FOR_DEADBAND
+        )
         self.MAIN_CONTROLLER_DEADBAND = constants.CONTROLLER_DEADBAND
         self.MAIN_CONTROLLER_PORT = constants.CONTROLLER_PORT
         # LED stuff here

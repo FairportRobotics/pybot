@@ -2,6 +2,7 @@ import math
 from ntcore import NetworkTableInstance
 from typing import Tuple
 
+
 class Limelight:
     # Inspired by https://github.com/FRC703/Robotpy-Limelight
     def setup(self):
@@ -124,6 +125,7 @@ class Limelight:
             The vertical sidelength
         """
         return self.tvert_entry.get()
+
     '''
     @property
     def bounding_box(self) -> Tuple[float, float]:
@@ -214,7 +216,9 @@ class Limelight:
         )
     '''
 
-    def calc_distance(self, camera_angle: float, mount_height: float, target_height: float):
+    def calc_distance(
+        self, camera_angle: float, mount_height: float, target_height: float
+    ):
         """
         Calculate the distance from the camera to the wall the target is mounted on
 
@@ -226,9 +230,13 @@ class Limelight:
         Returns:
             Gives the distance (in the same units that were used for the input) away from the wall that has the target
         """
-        return (target_height - mount_height) / math.tan(math.radians(camera_angle + self.vertical_offset))
+        return (target_height - mount_height) / math.tan(
+            math.radians(camera_angle + self.vertical_offset)
+        )
 
-    def calc_camera_angle(self, x_distance: float, mount_height: float, target_height: float):
+    def calc_camera_angle(
+        self, x_distance: float, mount_height: float, target_height: float
+    ):
         """
         Calculate the camera's mounted angle from known properties. Set the robot to a fixed
         distance away from the target and pass in the other properties and it will calculate
@@ -242,4 +250,6 @@ class Limelight:
         Returns:
             Gives the angle (in degrees) that the camera is mounted at
         """
-        return  -self.vertical_offset + math.degrees(math.atan((target_height - mount_height) / x_distance))
+        return -self.vertical_offset + math.degrees(
+            math.atan((target_height - mount_height) / x_distance)
+        )
