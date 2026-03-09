@@ -1,24 +1,27 @@
 from navx import AHRS
 from phoenix6.hardware import Pigeon2
 from wpimath.geometry import Rotation2d
-from wpilib.SPI.Port import kMXP
+import wpilib
 
 
 class NavX2:
-    SPI_PORT: kMXP
+    SPI_PORT: wpilib.SPI.Port.kMXP
+    USE_FUSED_HEADING: bool = False
 
-    def setup(self):
+    def setup(self) -> None:
         self.navx = AHRS(self.SPI_PORT)
+        self.reset()
+
+    def heading(self) -> float:
+        if self.USE_FUSED_HEADING:
+            return self.navx.getFusedHeading()
+        # return self.navx.getYaw()
+        return self.navx.getCompassHeading()
+
+    def reset(self) -> None:
         self.navx.reset()
 
-    def get_heading(self):
-        # Returns yaw (rotation around Z axis)
-        return self.navx.getYaw()
-
-    def reset_heading(self):
-        self.navx.reset()
-
-    def execute(self):
+    def execute(self) -> None:
         pass
 
 
@@ -32,7 +35,7 @@ class Pigeon:
         # Optional: reset yaw to 0 on startup
         self.pigeon2 = Pigeon2(self.DEVICE_ID, self.CANBUS)
         self._yaw = 0.0
-        self.pigeon2.set_yaw(0)
+        self.reset()
 
     def execute(self):
         """Standard MagicBot loop. Updates internal state."""
@@ -46,6 +49,7 @@ class Pigeon:
         """Returns a Rotation2d object for WPILib odometry."""
         return Rotation2d.fromDegrees(self._yaw)
 
-    def reset_yaw(self):
+    def reset(self):
         """Resets the yaw to 0."""
+        self._yaw = 0.0
         self.pigeon2.set_yaw(0)
