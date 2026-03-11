@@ -7,16 +7,21 @@ class LED:
 
     def execute(self):
         # Get the mode from the Network Tables
+        led_color = self.get_color()
         led_mode = self.get_mode()
         # Change the LED mode based on the value
         if led_mode == "rainbow":
             self.rainbow()
-        elif led_mode in self.colors:
-            self.set_RGB(self.colors[led_mode])
+        elif led_mode == "knightrider":
+            self.knightrider(self.colors[led_color])
+        elif led_color in self.colors:
+            self.set_RGB(self.colors[led_color])
         else:
             self.turn_off()
 
     def setup(self) -> None:
+        self.set_mode("knightrider")
+        self.set_color("red")
         self.colors = {
             "blue": (0, 0, 255),
             "green": (0, 255, 0),
@@ -26,6 +31,8 @@ class LED:
         self.led = AddressableLED(self.pwm_port)
         self.led.setLength(self.length)
         self.rainbow_first_pixel_hue = 0
+        self.knightrider_sign = 1
+        self.knightrider_start = 0
 
         # Create a buffer with the same length
         self.buffer = [AddressableLED.LEDData() for _ in range(self.length)]
@@ -37,6 +44,24 @@ class LED:
     # =========================================================================
     # CONTROL METHODS
     # =========================================================================
+
+    def knightrider(self, RGB):
+        SmartDashboard.putNumber("Knight Rider", self.knightrider_start)
+        r, g, b = RGB
+        for i in range(self.length):
+            if i == self.knightrider_start:
+                self.buffer[i].setRGB(r,g,b)
+            else:
+                self.buffer[i].setRGB(0,0,0)
+        self.knightrider_start = self.knightrider_start + (self.knightrider_sign * 1)
+        if self.knightrider_start == 0:
+            self.knightrider_sign = 1
+
+        if self.knightrider_start == self.length:
+            self.knightrider_sign = -1
+
+        self.led.setData(self.buffer)
+        self.led.start()
 
     def rainbow(self):
         """
@@ -56,6 +81,12 @@ class LED:
         self.rainbow_first_pixel_hue %= 180
         self.led.setData(self.buffer)
         self.led.start()
+
+    def set_color(self, color: str) -> None:
+        """
+        Write the LED color to Network Tables
+        """
+        SmartDashboard.putString("LED Color", color)
 
     def set_mode(self, mode: str) -> None:
         """
@@ -82,5 +113,8 @@ class LED:
     # =========================================================================
     # INFORMATIONAL METHODS
     # =========================================================================
+    def get_color(self) -> str:
+        return SmartDashboard.getString("LED Color", "off")
+    
     def get_mode(self) -> str:
         return SmartDashboard.getString("LED Mode", "off")
