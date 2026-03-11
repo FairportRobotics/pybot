@@ -8,7 +8,12 @@ nt.startClient4("my-client")
 sd = nt.getTable("SmartDashboard")
 
 while True:
-    mode = input("LED Mode: ")
-    if mode == "q":
+    change = input("Change (m=Mode, c=Color, q=Quit):")
+    if change == "q":
         break
-    sd.putString("LED Mode", mode)
+    elif change == "m":
+        mode = input("LED Mode: ")
+        sd.putString("LED Mode", mode)
+    elif change == "c":
+        color = input("LED Color: ")
+        sd.putString("LED Color", color)
