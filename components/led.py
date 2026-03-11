@@ -14,6 +14,8 @@ class LED:
             self.rainbow()
         elif led_mode == "knightrider":
             self.knightrider(self.colors[led_color])
+        elif led_mode == "pulse":
+            self.pulse(self.colors[led_color])
         elif led_color in self.colors:
             self.set_RGB(self.colors[led_color])
         else:
@@ -23,16 +25,26 @@ class LED:
         self.set_mode("knightrider")
         self.set_color("red")
         self.colors = {
-            "blue": (0, 0, 255),
-            "green": (0, 255, 0),
-            "red": (255, 0, 0),
-            "black": (0, 0, 0),
+            "red": (227, 26, 28),
+            "orange": (255, 127, 0),
+            "yellow": (255, 255, 51),
+            "green": (51, 160, 44),
+            "blue": (31, 120, 180),
+            "indigo": (75, 0, 130),
+            "violet": (127, 0, 255),
+            "purple": (152, 78, 163),
+            "pink": (251, 154, 153),
+            "brown": (166, 86, 40),
+            "lilac": (247, 129, 191),
         }
         self.led = AddressableLED(self.PWM_PORT)
         self.led.setLength(self.LENGTH)
         self.rainbow_first_pixel_hue = 0
         self.knightrider_sign = 1
         self.knightrider_start = 0
+        self.pulse_step = 10
+        self.pulse_sign = 1
+        self.pulse_current_rgb = (0, 0, 0)
 
         # Create a buffer with the same length
         self.buffer = [AddressableLED.LEDData() for _ in range(self.LENGTH)]
@@ -58,6 +70,22 @@ class LED:
         if self.knightrider_start == self.LENGTH:
             self.knightrider_sign = -1
 
+        self._update_leds()
+
+    def pulse(self, RGB):
+        max_value = max(RGB)
+        change_by = max_value / self.pulse_step * self.pulse_sign
+        self.pulse_current_rgb = tuple(
+            min(255, max(0, c + change_by)) for c in self.pulse_current_rgb
+        )
+        r, g, b = self.pulse_current_rgb
+
+        for i in range(self.LENGTH):
+            self.buffer[i].setRGB(r, g, b)
+
+        if self.pulse_current_rgb == RGB:
+            # Flip the sign
+            self.pulse_sign = -1 * self.pulse_sign
         self._update_leds()
 
     def rainbow(self):
