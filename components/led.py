@@ -38,8 +38,7 @@ class LED:
         self.buffer = [AddressableLED.LEDData() for _ in range(self.length)]
 
         # Set the data and start the output
-        self.led.setData(self.buffer)
-        self.led.start()
+        self._update_leds()
 
     # =========================================================================
     # CONTROL METHODS
@@ -50,9 +49,9 @@ class LED:
         r, g, b = RGB
         for i in range(self.length):
             if i == self.knightrider_start:
-                self.buffer[i].setRGB(r,g,b)
+                self.buffer[i].setRGB(r, g, b)
             else:
-                self.buffer[i].setRGB(0,0,0)
+                self.buffer[i].setRGB(0, 0, 0)
         self.knightrider_start = self.knightrider_start + (self.knightrider_sign * 1)
         if self.knightrider_start == 0:
             self.knightrider_sign = 1
@@ -60,8 +59,7 @@ class LED:
         if self.knightrider_start == self.length:
             self.knightrider_sign = -1
 
-        self.led.setData(self.buffer)
-        self.led.start()
+        self._update_leds()
 
     def rainbow(self):
         """
@@ -79,8 +77,7 @@ class LED:
         self.rainbow_first_pixel_hue += 3
         # Check bounds
         self.rainbow_first_pixel_hue %= 180
-        self.led.setData(self.buffer)
-        self.led.start()
+        self._update_leds()
 
     def set_color(self, color: str) -> None:
         """
@@ -101,8 +98,7 @@ class LED:
         r, g, b = RGB
         for i in range(self.length):
             self.buffer[i].setRGB(r, g, b)
-        self.led.setData(self.buffer)
-        self.led.start()
+        self._update_leds()
 
     def turn_off(self) -> None:
         """
@@ -110,11 +106,15 @@ class LED:
         """
         self.set_RGB((0, 0, 0))
 
+    def _update_leds(self):
+        self.led.setData(self.buffer)
+        self.led.start()
+
     # =========================================================================
     # INFORMATIONAL METHODS
     # =========================================================================
     def get_color(self) -> str:
         return SmartDashboard.getString("LED Color", "off")
-    
+
     def get_mode(self) -> str:
         return SmartDashboard.getString("LED Mode", "off")

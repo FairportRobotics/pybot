@@ -1,6 +1,7 @@
 import wpilib
 from magicbot import feedback
 
+
 class RoboRioAccelerometer:
     def setup(self) -> None:
         self.accelerometer = wpilib.BuiltInAccelerometer()
@@ -17,11 +18,11 @@ class RoboRioAccelerometer:
     @feedback
     def x(self):
         return self.x_accel
-    
+
     @feedback
     def y(self):
         return self.y_accel
-    
+
     @feedback
     def z(self):
         return self.z_accel
