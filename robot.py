@@ -5,7 +5,6 @@ from magicbot import MagicRobot
 
 class MyRobot(MagicRobot):
     LED: components.LED
-    LOGGER: components.Lumberjack
     MAIN_CONTROLLER: components.XboxController
 
     def createObjects(self):
