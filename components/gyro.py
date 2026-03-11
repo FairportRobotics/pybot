@@ -1,30 +1,30 @@
 from magicbot import feedback
-from navx import AHRS
+import navx
 from wpimath.geometry import Rotation2d, Rotation3d, Pose2d
-import wpilib
 
 
 class NavX2:
-    SPI_PORT: wpilib.SPI.Port.kMXP
     USE_FUSED_HEADING: bool = True
 
     def execute(self) -> None:
         """Standard MagicBot loop. Updates internal state."""
-        self._pitch = self.navx.getPitch()
-        self._roll = self.navx.getRoll()
+        self._pitch = self.gyro.getPitch()
+        self._roll = self.gyro.getRoll()
         self._yaw = self.heading()
-        self._rotation2d = self.navx.getRotation2d()
-        self._rotation3d = self.navx.getRotation3d()
+        self._rotation2d = self.gyro.getRotation2d()
+        self._rotation3d = self.gyro.getRotation3d()
+        self._last_update = self.gyro.getLastSensorTimestamp()
 
     def setup(self) -> None:
         """Called after injection but before the first loop."""
-        self.navx = AHRS(self.SPI_PORT)
+        self.gyro = navx.AHRS.create_spi()
         self.reset()
         self._pitch = 0.0
         self._roll = 0.0
         self._yaw = 0.0
-        self._rotation2d = self.navx.getRotation2d()
-        self._rotation3d = self.navx.getRotation3d()
+        self._last_update = 0.0
+        self._rotation2d = self.gyro.getRotation2d()
+        self._rotation3d = self.gyro.getRotation3d()
 
     # =========================================================================
     # CONTROL METHODS
@@ -32,8 +32,8 @@ class NavX2:
 
     def reset(self) -> None:
         self._yaw = 0.0
-        self.navx.reset()
-        self.navx.zeroYaw()
+        self.gyro.reset()
+        self.gyro.zeroYaw()
 
     # =========================================================================
     # INFORMATIONAL METHODS
@@ -41,29 +41,35 @@ class NavX2:
 
     @feedback
     def calibrated(self) -> bool:
-        return self.navx.isCalibrating() == False
+        return self.gyro.isCalibrating() == False
 
     @feedback
     def connected(self) -> bool:
-        return self.navx.isConnected()
+        return self.gyro.isConnected()
 
     def heading(self) -> float:
         if self.USE_FUSED_HEADING:
-            return self.navx.getFusedHeading()
-        # return self.navx.getYaw()
-        return self.navx.getCompassHeading()
+            return self.gyro.getFusedHeading()
+        # return self.gyro.getYaw()
+        return self.gyro.getCompassHeading()
 
     @feedback
     def magnetic_disturbance(self) -> bool:
-        return self.navx.isMagneticDisturbance()
+        return self.gyro.isMagneticDisturbance()
 
     @feedback
     def magnetometer_calibrated(self) -> bool:
-        return self.navx.isMagnetometerCalibrated()
+        return self.gyro.isMagnetometerCalibrated()
 
+    @feedback
+    def last_updated(self) -> float:
+        return self._last_update
+
+    @feedback
     def pitch(self) -> float:
         return self._pitch
 
+    @feedback
     def roll(self) -> float:
         return self._roll
 
@@ -75,5 +81,6 @@ class NavX2:
         """Returns a 3D rotation object for WPILib odometry."""
         return self._rotation3d
 
+    @feedback
     def yaw(self) -> float:
         return self._yaw

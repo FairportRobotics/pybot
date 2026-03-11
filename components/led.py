@@ -2,8 +2,8 @@ from wpilib import AddressableLED, SmartDashboard
 
 
 class LED:
-    pwm_port: int
-    length: int
+    PWM_PORT: int
+    LENGTH: int
 
     def execute(self):
         # Get the mode from the Network Tables
@@ -28,14 +28,14 @@ class LED:
             "red": (255, 0, 0),
             "black": (0, 0, 0),
         }
-        self.led = AddressableLED(self.pwm_port)
-        self.led.setLength(self.length)
+        self.led = AddressableLED(self.PWM_PORT)
+        self.led.setLength(self.LENGTH)
         self.rainbow_first_pixel_hue = 0
         self.knightrider_sign = 1
         self.knightrider_start = 0
 
         # Create a buffer with the same length
-        self.buffer = [AddressableLED.LEDData() for _ in range(self.length)]
+        self.buffer = [AddressableLED.LEDData() for _ in range(self.LENGTH)]
 
         # Set the data and start the output
         self._update_leds()
@@ -45,9 +45,8 @@ class LED:
     # =========================================================================
 
     def knightrider(self, RGB):
-        SmartDashboard.putNumber("Knight Rider", self.knightrider_start)
         r, g, b = RGB
-        for i in range(self.length):
+        for i in range(self.LENGTH):
             if i == self.knightrider_start:
                 self.buffer[i].setRGB(r, g, b)
             else:
@@ -56,7 +55,7 @@ class LED:
         if self.knightrider_start == 0:
             self.knightrider_sign = 1
 
-        if self.knightrider_start == self.length:
+        if self.knightrider_start == self.LENGTH:
             self.knightrider_sign = -1
 
         self._update_leds()
@@ -66,10 +65,10 @@ class LED:
         Produce a rainbow effect
         """
         # For every pixel
-        for i in range(self.length):
+        for i in range(self.LENGTH):
             # Calculate the hue
             # Hue is 0-180 in WPILib
-            hue = (self.rainbow_first_pixel_hue + (i * 180 / self.length)) % 180
+            hue = (self.rainbow_first_pixel_hue + (i * 180 / self.LENGTH)) % 180
             # Set the value (HSV: Hue, Saturation, Value/Brightness)
             self.buffer[i].setHSV(int(hue), 255, 128)
 
@@ -96,7 +95,7 @@ class LED:
         Set the RGB values for the
         """
         r, g, b = RGB
-        for i in range(self.length):
+        for i in range(self.LENGTH):
             self.buffer[i].setRGB(r, g, b)
         self._update_leds()
 

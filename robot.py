@@ -5,6 +5,7 @@ from magicbot import MagicRobot
 
 class MyRobot(MagicRobot):
     ACCELEROMETER: components.RoboRioAccelerometer
+    GYRO: components.NavX2
     LED: components.LED
     MAIN_CONTROLLER: components.XboxController
 
@@ -17,8 +18,8 @@ class MyRobot(MagicRobot):
         self.MAIN_CONTROLLER_DEADBAND = constants.CONTROLLER_DEADBAND
         self.MAIN_CONTROLLER_PORT = constants.CONTROLLER_PORT
         # LED stuff here
-        self.LED_length = constants.LED_LENGTH
-        self.LED_pwm_port = constants.LED_PWM_PORT
+        self.LED_LENGTH = constants.LED_LENGTH
+        self.LED_PWM_PORT = constants.LED_PWM_PORT
 
     def teleopInit(self):
         """Called when teleop starts; optional"""

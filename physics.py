@@ -1,17 +1,3 @@
-#
-# See the documentation for more details on how this works
-#
-# Documentation can be found at https://robotpy.readthedocs.io/projects/pyfrc/en/latest/physics.html
-#
-# The idea here is you provide a simulation object that overrides specific
-# pieces of WPILib, and modifies motors/sensors accordingly depending on the
-# state of the simulation. An example of this would be measuring a motor
-# moving for a set period of time, and then changing a limit switch to turn
-# on after that period of time. This can help you do more complex simulations
-# of your robot code without too much extra effort.
-#
-# Examples can be found at https://github.com/robotpy/examples
-
 import wpilib.simulation
 
 from pyfrc.physics.core import PhysicsInterface
@@ -25,10 +11,6 @@ if typing.TYPE_CHECKING:
 
 
 class PhysicsEngine:
-    """
-    Simulates a 4-wheel robot using Tank Drive joystick control
-    """
-
     def __init__(self, physics_controller: PhysicsInterface, robot: "MyRobot"):
         """
         :param physics_controller: `pyfrc.physics.core.Physics` object
@@ -36,30 +18,31 @@ class PhysicsEngine:
         :param robot: your robot object
         """
 
+        # Motors
+        # self.l_motor = wpilib.simulation.PWMSim(robot.l_motor.getChannel())
+        # self.r_motor = wpilib.simulation.PWMSim(robot.r_motor.getChannel())
+
+        # NavX (SPI interface)
+        self.navx = wpilib.simulation.SimDeviceSim("navX-Sensor[4]")
+        self.navx_yaw = self.navx.getDouble("Yaw")
+
         self.physics_controller = physics_controller
 
-        print("TODO: modify simulation for my robot")
-
-        """
         # Change these parameters to fit your robot!
-
-        # Motors
-        self.l_motor = wpilib.simulation.PWMSim(robot.l_motor)
-        self.r_motor = wpilib.simulation.PWMSim(robot.r_motor)
-
         bumper_width = 3.25 * units.inch
 
+        # fmt: off
         self.drivetrain = tankmodel.TankModel.theory(
             motor_cfgs.MOTOR_CFG_CIM,           # motor configuration
             110 * units.lbs,                    # robot mass
-            10.71,                              # drivetrain gear ratio \omega In/\omega Out
+            10.71,                              # drivetrain gear ratio
             2,                                  # motors per side
             22 * units.inch,                    # robot wheelbase
             23 * units.inch + bumper_width * 2, # robot width
             32 * units.inch + bumper_width * 2, # robot length
             6 * units.inch,                     # wheel diameter
         )
-        """
+        # fmt: on
 
     def update_sim(self, now: float, tm_diff: float) -> None:
         """
@@ -71,11 +54,14 @@ class PhysicsEngine:
                         time that this function was called
         """
 
-        """
         # Simulate the drivetrain
-        l_motor = self.l_motor.getSpeed()
-        r_motor = self.r_motor.getSpeed()
+        l_motor = 0  # self.l_motor.getSpeed()
+        r_motor = 0  # self.r_motor.getSpeed()
 
         transform = self.drivetrain.calculate(l_motor, r_motor, tm_diff)
         pose = self.physics_controller.move_robot(transform)
-        """
+
+        # Update the gyro simulation
+        # -> FRC gyros like NavX are positive clockwise, but
+        #    the returned pose is positive counter-clockwise
+        self.navx_yaw.set(-pose.rotation().degrees())
