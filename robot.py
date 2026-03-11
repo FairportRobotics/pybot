@@ -4,6 +4,7 @@ from magicbot import MagicRobot
 
 
 class MyRobot(MagicRobot):
+    ACCELEROMETER: components.RoboRioAccelerometer
     LED: components.LED
     MAIN_CONTROLLER: components.XboxController
 
