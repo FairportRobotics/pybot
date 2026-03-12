@@ -4,11 +4,14 @@ from wpilib import AddressableLED, SmartDashboard
 class LED:
     PWM_PORT: int
     LENGTH: int
+    DEFAULT_COLOR: str
+    DEFAULT_MODE: str
 
     def execute(self):
         # Get the mode from the Network Tables
         led_color = self.get_color()
         led_mode = self.get_mode()
+
         # Change the LED mode based on the value
         if led_mode == "rainbow":
             self.rainbow()
@@ -16,14 +19,17 @@ class LED:
             self.knightrider(self.colors[led_color])
         elif led_mode == "pulse":
             self.pulse(self.colors[led_color])
-        elif led_color in self.colors:
+        elif led_mode == "solid" and led_color in self.colors:
             self.set_RGB(self.colors[led_color])
         else:
             self.turn_off()
 
     def setup(self) -> None:
-        self.set_mode("pulse")
-        self.set_color("red")
+        # Set the default mode and colors
+        self.set_mode(self.DEFAULT_MODE)
+        self.set_color(self.DEFAULT_COLOR)
+
+        # Define colors in RGB values
         self.colors = {
             "red": (225, 0, 0),
             "yellow": (255, 127, 0),
@@ -31,16 +37,20 @@ class LED:
             "blue": (0, 0, 255),
             "purple": (255, 0, 255),
         }
+
+        # Set up the LEDs
         self.led = AddressableLED(self.PWM_PORT)
         self.led.setLength(self.LENGTH)
+
+        # Define variables for the LED modes
         self.rainbow_first_pixel_hue = 0
         self.knightrider_sign = 1
-        self.knightrider_start = 0
+        self.knightrider_light_up = 0
         self.pulse_steps = 10
         self.pulse_current_step = 0
         self.pulse_sign = 1
 
-        # Create a buffer with the same length
+        # Create a buffer
         self.buffer = [AddressableLED.LEDData() for _ in range(self.LENGTH)]
 
         # Set the data and start the output
@@ -51,30 +61,47 @@ class LED:
     # =========================================================================
 
     def knightrider(self, RGB):
+        """
+        Create a knight rider effect for a color
+        """
         r, g, b = RGB
         for i in range(self.LENGTH):
-            if i == self.knightrider_start:
+            # Turn on a single LED
+            if i == self.knightrider_light_up:
                 self.buffer[i].setRGB(r, g, b)
+            # Turn off all others
             else:
                 self.buffer[i].setRGB(0, 0, 0)
-        self.knightrider_start = self.knightrider_start + (self.knightrider_sign * 1)
-        if self.knightrider_start == 0:
-            self.knightrider_sign = 1
 
-        if self.knightrider_start == self.LENGTH:
-            self.knightrider_sign = -1
+        # Change the LED to light up
+        self.knightrider_light_up = self.knightrider_light_up + (
+            self.knightrider_sign * 1
+        )
+
+        # Check if we need to flip the sign
+        if self.knightrider_light_up == 0 or self.knightrider_light_up == self.LENGTH:
+            self.knightrider_sign = -1 * self.knightrider_sign
 
         self._update_leds()
 
     def pulse(self, RGB):
+        """
+        Create a pulsing effect for a color
+        """
+        # Create the RGB values based on which step we currently are in
         r, g, b = tuple(
             int(RGB[i] + (-RGB[i]) * self.pulse_current_step / self.pulse_steps)
             for i in range(3)
         )
+
+        # Apply it to all the LEDs
         for i in range(self.LENGTH):
             self.buffer[i].setRGB(r, g, b)
 
+        # Increment/decrement the current step
         self.pulse_current_step = self.pulse_current_step + self.pulse_sign
+
+        # Check if we need to flip the sign
         if self.pulse_current_step == 0 or self.pulse_current_step == self.pulse_steps:
             self.pulse_sign = -1 * self.pulse_sign
 
@@ -94,8 +121,10 @@ class LED:
 
         # Increase by to make the rainbow "move"
         self.rainbow_first_pixel_hue += 3
+
         # Check bounds
         self.rainbow_first_pixel_hue %= 180
+
         self._update_leds()
 
     def set_color(self, color: str) -> None:
@@ -126,6 +155,9 @@ class LED:
         self.set_RGB((0, 0, 0))
 
     def _update_leds(self):
+        """
+        Update the LED data and start the output
+        """
         self.led.setData(self.buffer)
         self.led.start()
 

@@ -20,6 +20,8 @@ class MyRobot(MagicRobot):
         # LED stuff here
         self.LED_LENGTH = constants.LED_LENGTH
         self.LED_PWM_PORT = constants.LED_PWM_PORT
+        self.LED_DEFAULT_COLOR = "red"
+        self.LED_DEFAULT_MODE = "solid"
 
     def teleopInit(self):
         """Called when teleop starts; optional"""
