@@ -1,30 +1,45 @@
 from magicbot import feedback
 import navx
-from wpimath.geometry import Rotation2d, Rotation3d, Pose2d
+from wpimath.geometry import Rotation2d, Rotation3d
 
 
 class NavX2:
     USE_FUSED_HEADING: bool = True
+    SWITCH_X_AND_Y: bool = False
 
     def execute(self) -> None:
         """Standard MagicBot loop. Updates internal state."""
-        self._pitch = self.gyro.getPitch()
-        self._roll = self.gyro.getRoll()
-        self._yaw = self.heading()
-        self._rotation2d = self.gyro.getRotation2d()
-        self._rotation3d = self.gyro.getRotation3d()
-        self._last_update = self.gyro.getLastSensorTimestamp()
+        if self.is_connected:
+            if self.SWITCH_X_AND_Y:
+                self._pitch = self.gyro.getRoll()
+                self._roll = self.gyro.getPitch()
+            else:
+                self._pitch = self.gyro.getPitch()
+                self._roll = self.gyro.getRoll()
+            self._yaw = self.heading()
+            self._rotation2d = self.gyro.getRotation2d()
+            self._rotation3d = self.gyro.getRotation3d()
+            self._last_update = self.gyro.getLastSensorTimestamp()
+        else:
+            try:
+                self.is_connected = self.gyro.isConnected()
+            except Exception as e:
+                pass
 
     def setup(self) -> None:
         """Called after injection but before the first loop."""
-        self.gyro = navx.AHRS.create_spi()
-        self.reset()
         self._pitch = 0.0
         self._roll = 0.0
         self._yaw = 0.0
         self._last_update = 0.0
         self._rotation2d = self.gyro.getRotation2d()
         self._rotation3d = self.gyro.getRotation3d()
+        self.is_connected = False
+        try:
+            self.gyro = navx.AHRS.create_spi()
+            self.reset()
+        except Exception as e:
+            pass
 
     # =========================================================================
     # CONTROL METHODS
@@ -41,25 +56,31 @@ class NavX2:
 
     @feedback
     def calibrated(self) -> bool:
-        return self.gyro.isCalibrating() == False
+        if self.is_connected:
+            return self.gyro.isCalibrating() == False
+        return False
 
     @feedback
     def connected(self) -> bool:
-        return self.gyro.isConnected()
+        return self.is_connected
 
+    @feedback
     def heading(self) -> float:
-        if self.USE_FUSED_HEADING:
-            return self.gyro.getFusedHeading()
-        # return self.gyro.getYaw()
-        return self.gyro.getCompassHeading()
+        if self.is_connected:
+            if self.USE_FUSED_HEADING:
+                return self.gyro.getFusedHeading()
+            return self.gyro.getCompassHeading()
+        return 0.0
 
-    @feedback
     def magnetic_disturbance(self) -> bool:
-        return self.gyro.isMagneticDisturbance()
+        if self.is_connected:
+            return self.gyro.isMagneticDisturbance()
+        return False
 
-    @feedback
     def magnetometer_calibrated(self) -> bool:
-        return self.gyro.isMagnetometerCalibrated()
+        if self.is_connected:
+            return self.gyro.isMagnetometerCalibrated()
+        return False
 
     @feedback
     def last_updated(self) -> float:
