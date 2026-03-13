@@ -1,3 +1,7 @@
+from wpilib import RobotBase
+
+ROBOT_MODE = "REAL" if RobotBase.isReal() else "SIM"
+
 # Should we correct for the controller deadband?
 CONTROLLER_CORRECT_FOR_DEADBAND = True
 # The deadband for the controller joysticks

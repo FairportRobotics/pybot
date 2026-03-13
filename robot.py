@@ -1,6 +1,7 @@
 import components
 import constants
 from magicbot import MagicRobot
+import pykit.logger
 
 
 class MyRobot(MagicRobot):
@@ -8,6 +9,7 @@ class MyRobot(MagicRobot):
     GYRO: components.NavX2
     LED: components.LED
     MAIN_CONTROLLER: components.XboxController
+    SCRIBE: components.Scribe
 
     def createObjects(self):
         """Create motors and stuff here"""
@@ -22,6 +24,9 @@ class MyRobot(MagicRobot):
         self.LED_PWM_PORT = constants.LED_PWM_PORT
         self.LED_DEFAULT_COLOR = "red"
         self.LED_DEFAULT_MODE = "solid"
+
+        self.SCRIBE_LOGGER = pykit.logger.Logger()
+        self.SCRIBE_MODE = constants.ROBOT_MODE
 
     def teleopInit(self):
         """Called when teleop starts; optional"""
