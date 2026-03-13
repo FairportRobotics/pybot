@@ -39,8 +39,8 @@ class NavX2:
             self._rotation2d = self.gyro.getRotation2d()
             self._rotation3d = self.gyro.getRotation3d()
         except Exception as e:
-            self._rotation2d = Rotation2d(0,0)
-            self._rotation3d = Rotation3d(0,0,0)
+            self._rotation2d = Rotation2d(0, 0)
+            self._rotation3d = Rotation3d(0, 0, 0)
 
     # =========================================================================
     # CONTROL METHODS
