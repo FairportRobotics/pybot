@@ -3,6 +3,8 @@ from magicbot import feedback
 
 
 class RoboRioAccelerometer:
+    SWITCH_X_AND_Y: bool = False
+
     def setup(self) -> None:
         self.accelerometer = wpilib.BuiltInAccelerometer()
         self.x_accel = 0.0
@@ -11,8 +13,12 @@ class RoboRioAccelerometer:
 
     def execute(self):
         # Get the acceleration values
-        self.x_accel = self.accelerometer.getX()
-        self.y_accel = self.accelerometer.getY()
+        if self.SWITCH_X_AND_Y:
+            self.x_accel = self.accelerometer.getY()
+            self.y_accel = self.accelerometer.getX()
+        else:
+            self.x_accel = self.accelerometer.getX()
+            self.y_accel = self.accelerometer.getY()
         self.z_accel = self.accelerometer.getZ()
 
     @feedback
