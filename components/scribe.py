@@ -1,63 +1,45 @@
-import os
-from pykit.wpilog.wpilogwriter import WPILOGWriter
-from pykit.wpilog.wpilogreader import WPILOGReader
-from pykit.networktables.nt4Publisher import NT4Publisher
-from pykit.logger import Logger
+from wpilib import DataLogManager
+import wpilib.deployinfo
+from wpiutil.log import (
+    BooleanLogEntry,
+    DoubleLogEntry,
+    IntegerLogEntry,
+    StringLogEntry,
+)
+
 import wpilib
 
 
 class Scribe:
-    LOGGER: Logger
-    MODE: str
+    def setup(self):
+        # Starts recording to data log
+        DataLogManager.start()
+        # Set up custom log entries
+        l = DataLogManager.getLog()
+        self.log = {
+            "boolean": BooleanLogEntry(l, "/scribe/boolean"),
+            "double": DoubleLogEntry(l, "/scribe/double"),
+            "string": StringLogEntry(l, "/scribe/string"),
+            "integer": IntegerLogEntry(l, "/scribe/integer"),
+        }
 
-    def execute(self) -> None:
-        """Standard MagicBot loop. Updates internal state."""
+        deploy_config = wpilib.deployinfo.getDeployData()
+
+        if deploy_config is not None:
+            metadata_map = {
+                "Deploy Host": "deploy-host",
+                "Deploy User": "deploy-user",
+                "Deploy Date": "deploy-date",
+                "Code Path": "code-path",
+                "Git Hash": "git-hash",
+                "Git Branch": "git-branch",
+                "Git Description": "git-desc",
+            }
+
+            for log_key, config_key in metadata_map.items():
+                value = deploy_config.get(config_key, "")
+                if value:
+                    self.log["string"].append(f"{log_key}: {value}")
+
+    def execute(self):
         pass
-
-    def setup(self) -> None:
-        """Called after injection but before the first loop."""
-        self.LOGGER.recordMetadata("Robot", type(self).__name__)
-        match self.MODE:
-            case "REAL":
-                deploy_config = wpilib.deployinfo.getDeployData()
-                if deploy_config is not None:
-                    self.LOGGER.recordMetadata(
-                        "Deploy Host", deploy_config.get("deploy-host", "")
-                    )
-                    self.LOGGER.recordMetadata(
-                        "Deploy User", deploy_config.get("deploy-user", "")
-                    )
-                    self.LOGGER.recordMetadata(
-                        "Deploy Date", deploy_config.get("deploy-date", "")
-                    )
-                    self.LOGGER.recordMetadata(
-                        "Code Path", deploy_config.get("code-path", "")
-                    )
-                    self.LOGGER.recordMetadata(
-                        "Git Hash", deploy_config.get("git-hash", "")
-                    )
-                    self.LOGGER.recordMetadata(
-                        "Git Branch", deploy_config.get("git-branch", "")
-                    )
-                    self.LOGGER.recordMetadata(
-                        "Git Description", deploy_config.get("git-desc", "")
-                    )
-                self.LOGGER.addDataReciever(NT4Publisher(True))
-                self.LOGGER.addDataReciever(WPILOGWriter())
-            case "SIMULATION":
-                self.LOGGER.addDataReciever(WPILOGWriter())
-                self.LOGGER.addDataReciever(NT4Publisher(True))
-            case "REPLAY":
-                self.useTiming = (
-                    False  # Disable timing in replay mode, run as fast as possible
-                )
-                log_path = os.environ["LOG_PATH"]
-                log_path = os.path.abspath(log_path)
-                print(f"Starting log from {log_path}")
-                self.LOGGER.setReplaySource(WPILOGReader(log_path))
-                self.LOGGER.addDataReciever(WPILOGWriter(log_path[:-7] + "_sim.wpilog"))
-        self.LOGGER.start()
-
-    def log(self, key: str, message: str) -> None:
-        """Logs a message"""
-        self.LOGGER.recordOutput(key, message)
