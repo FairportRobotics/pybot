@@ -6,6 +6,7 @@ from wpimath.geometry import Rotation2d, Rotation3d
 class NavX2:
     USE_FUSED_HEADING: bool = True
     SWITCH_X_AND_Y: bool = False
+    ROBOT_CENTRIC: bool = False
 
     def execute(self) -> None:
         """Standard MagicBot loop. Updates internal state."""
@@ -106,3 +107,45 @@ class NavX2:
     @feedback
     def yaw(self) -> float:
         return self._yaw
+
+    @feedback
+    def distance_x(self):
+        if self.SWITCH_X_AND_Y:
+            return self.gyro.getDisplacementY()
+        return self.gyro.getDisplacementX()
+
+    @feedback
+    def distance_y(self):
+        if self.SWITCH_X_AND_Y:
+            return self.gyro.getDisplacementX()
+        return self.gyro.getDisplacementY()
+
+    @feedback
+    def distance_z(self):
+        return self.gyro.getDisplacementZ()
+
+    @feedback
+    def velocity_x(self):
+        if self.ROBOT_CENTRIC:
+            if self.SWITCH_X_AND_Y:
+                return self.gyro.getRobotCentricVelocityY()
+            return self.gyro.getRobotCentricVelocityX()
+        else:
+            if self.SWITCH_X_AND_Y:
+                return self.gyro.getVelocityY()
+            return self.gyro.getVelocityX()
+
+    @feedback
+    def velocity_y(self):
+        if self.ROBOT_CENTRIC:
+            if self.SWITCH_X_AND_Y:
+                return self.gyro.getRobotCentricVelocityX()
+            return self.gyro.getRobotCentricVelocityY()
+        else:
+            if self.SWITCH_X_AND_Y:
+                return self.gyro.getVelocityX()
+            return self.gyro.getVelocityY()
+
+    @feedback
+    def velocity_z(self):
+        return self.gyro.getVelocityZ()
