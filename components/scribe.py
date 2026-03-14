@@ -11,17 +11,14 @@ import wpilib
 
 
 class Scribe:
+    LOG_NETWORK_TABLES: bool = True
+    LOG_CONSOLE_OUTPUT: bool = True
+
     def setup(self):
         # Starts recording to data log
         DataLogManager.start()
-        # Set up custom log entries
-        l = DataLogManager.getLog()
-        self.log = {
-            "boolean": BooleanLogEntry(l, "/scribe/boolean"),
-            "double": DoubleLogEntry(l, "/scribe/double"),
-            "string": StringLogEntry(l, "/scribe/string"),
-            "integer": IntegerLogEntry(l, "/scribe/integer"),
-        }
+        DataLogManager.logNetworkTables(self.LOG_NETWORK_TABLES)
+        DataLogManager.logConsoleOutput(self.LOG_CONSOLE_OUTPUT)
 
         deploy_config = wpilib.deployinfo.getDeployData()
 
@@ -37,9 +34,15 @@ class Scribe:
             }
 
             for log_key, config_key in metadata_map.items():
-                value = deploy_config.get(config_key, "")
+                value = deploy_config.get(config_key, False)
                 if value:
-                    self.log["string"].append(f"{log_key}: {value}")
+                    DataLogManager.log(f"{log_key}: {value}")
 
     def execute(self):
         pass
+
+    def log(self, message: str):
+        DataLogManager.log(message)
+
+    def stop(self):
+        DataLogManager.stop()

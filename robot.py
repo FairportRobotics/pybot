@@ -33,7 +33,7 @@ class MyRobot(MagicRobot):
         left_x, left_y, right_x, right_y = self.MAIN_CONTROLLER.get_joysticks()
 
     def disabledInit(self):
-        pass
+        self.SCRIBE.stop()
 
     def disabledPeriodic(self):
         self.LED.turn_off()
