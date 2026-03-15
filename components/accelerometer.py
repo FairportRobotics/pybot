@@ -4,7 +4,7 @@ import time
 
 
 class RoboRioAccelerometer:
-    SWITCH_X_AND_Y: bool = False
+    switch_x_and_y: bool = False
 
     def setup(self) -> None:
         self.accelerometer = wpilib.BuiltInAccelerometer()
@@ -22,7 +22,7 @@ class RoboRioAccelerometer:
         self.last_time = now
 
         # Get the acceleration values
-        if self.SWITCH_X_AND_Y:
+        if self.switch_x_and_y:
             self.x_accel = self.accelerometer.getY()
             self.y_accel = self.accelerometer.getX()
         else:

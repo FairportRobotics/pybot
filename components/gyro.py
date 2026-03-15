@@ -4,14 +4,14 @@ from wpimath.geometry import Rotation2d, Rotation3d
 
 
 class NavX2:
-    USE_FUSED_HEADING: bool = True
-    SWITCH_X_AND_Y: bool = False
-    ROBOT_CENTRIC: bool = False
+    use_fused_heading: bool = True
+    switch_x_and_y: bool = False
+    robot_centric: bool = False
 
     def execute(self) -> None:
         """Standard MagicBot loop. Updates internal state."""
         if self.is_connected:
-            if self.SWITCH_X_AND_Y:
+            if self.switch_x_and_y:
                 self._pitch = self.gyro.getRoll()
                 self._roll = self.gyro.getPitch()
             else:
@@ -69,7 +69,7 @@ class NavX2:
     @feedback
     def heading(self) -> float:
         if self.is_connected:
-            if self.USE_FUSED_HEADING:
+            if self.use_fused_heading:
                 return self.gyro.getFusedHeading()
             return self.gyro.getCompassHeading()
         return 0.0
@@ -110,13 +110,13 @@ class NavX2:
 
     @feedback
     def distance_x(self):
-        if self.SWITCH_X_AND_Y:
+        if self.switch_x_and_y:
             return self.gyro.getDisplacementY()
         return self.gyro.getDisplacementX()
 
     @feedback
     def distance_y(self):
-        if self.SWITCH_X_AND_Y:
+        if self.switch_x_and_y:
             return self.gyro.getDisplacementX()
         return self.gyro.getDisplacementY()
 
@@ -126,23 +126,23 @@ class NavX2:
 
     @feedback
     def velocity_x(self):
-        if self.ROBOT_CENTRIC:
-            if self.SWITCH_X_AND_Y:
+        if self.robot_centric:
+            if self.switch_x_and_y:
                 return self.gyro.getRobotCentricVelocityY()
             return self.gyro.getRobotCentricVelocityX()
         else:
-            if self.SWITCH_X_AND_Y:
+            if self.switch_x_and_y:
                 return self.gyro.getVelocityY()
             return self.gyro.getVelocityX()
 
     @feedback
     def velocity_y(self):
-        if self.ROBOT_CENTRIC:
-            if self.SWITCH_X_AND_Y:
+        if self.robot_centric:
+            if self.switch_x_and_y:
                 return self.gyro.getRobotCentricVelocityX()
             return self.gyro.getRobotCentricVelocityY()
         else:
-            if self.SWITCH_X_AND_Y:
+            if self.switch_x_and_y:
                 return self.gyro.getVelocityX()
             return self.gyro.getVelocityY()
 

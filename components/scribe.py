@@ -11,14 +11,14 @@ import wpilib
 
 
 class Scribe:
-    LOG_NETWORK_TABLES: bool = True
-    LOG_CONSOLE_OUTPUT: bool = True
+    log_network_tables: bool = True
+    log_console_output: bool = True
 
     def setup(self):
         # Starts recording to data log
         DataLogManager.start()
-        DataLogManager.logNetworkTables(self.LOG_NETWORK_TABLES)
-        DataLogManager.logConsoleOutput(self.LOG_CONSOLE_OUTPUT)
+        DataLogManager.logNetworkTables(self.log_network_tables)
+        DataLogManager.logConsoleOutput(self.log_console_output)
 
         deploy_config = wpilib.deployinfo.getDeployData()
 
