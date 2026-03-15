@@ -1,7 +1,7 @@
 from limelight import limelight, limelight_calcs
 
-class Limelight:
 
+class Limelight:
     def setup(self):
         self.camera = limelight.Limelight()
 

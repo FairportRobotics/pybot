@@ -3,6 +3,7 @@ from .controller import PlayStationController, XboxController
 from .gyro import NavX2
 from .led import LED
 from .scribe import Scribe
+from .tankdrive import TankDrive
 from .vision import Limelight
 
 __all__ = [
@@ -12,5 +13,6 @@ __all__ = [
     "PlayStationController",
     "RoboRioAccelerometer",
     "Scribe",
+    "TankDrive",
     "XboxController",
 ]

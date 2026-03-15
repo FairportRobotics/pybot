@@ -10,7 +10,6 @@ class MyRobot(MagicRobot):
     led: components.LED
     limelight: components.Limelight
     main_controller: components.XboxController
-    
 
     def createObjects(self):
         """Create motors and stuff here"""
