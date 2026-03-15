@@ -4,11 +4,13 @@ from magicbot import MagicRobot
 
 
 class MyRobot(MagicRobot):
+    SCRIBE: components.Scribe
     ACCELEROMETER: components.RoboRioAccelerometer
     GYRO: components.NavX2
     LED: components.LED
+    LIMELIGHT: components.Limelight
     MAIN_CONTROLLER: components.XboxController
-    SCRIBE: components.Scribe
+    
 
     def createObjects(self):
         """Create motors and stuff here"""
@@ -33,7 +35,7 @@ class MyRobot(MagicRobot):
         left_x, left_y, right_x, right_y = self.MAIN_CONTROLLER.get_joysticks()
 
     def disabledInit(self):
-        self.SCRIBE.stop()
+        pass
 
     def disabledPeriodic(self):
         self.LED.turn_off()

@@ -3,9 +3,11 @@ from .controller import PlayStationController, XboxController
 from .gyro import NavX2
 from .led import LED
 from .scribe import Scribe
+from .vision import Limelight
 
 __all__ = [
     "LED",
+    "Limelight",
     "NavX2",
     "PlayStationController",
     "RoboRioAccelerometer",

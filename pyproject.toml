@@ -26,4 +26,6 @@ robotpy_extras = [
 ]
 
 # Other pip packages to install
-requires = []
+requires = [
+    "robotpy-limelight@git+https://github.com/FRC703/Robotpy-Limelight"
+]
