@@ -25,7 +25,7 @@ TRACK_WIDTH = 0.52  # left-to-right wheel center distance in meters
 WHEEL_BASE = 0.52  # front-to-rear wheel center distance in meters
 
 CAN_IDS = {
-    "font_left_drive": 11,
+    "front_left_drive": 11,
     "front_left_steer": 12,
     "front_left_cancoder": 13,
     "front_right_drive": 21,
@@ -36,6 +36,7 @@ CAN_IDS = {
     "rear_left_cancoder": 33,
     "rear_right_drive": 41,
     "rear_right_steer": 42,
+    "rear_right_cancoder": 43,
 }
 
 CANCODER_OFFSETS = {

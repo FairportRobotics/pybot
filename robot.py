@@ -9,7 +9,6 @@ from phoenix6.configs import (
 from phoenix6.signals import (
     NeutralModeValue,
     FeedbackSensorSourceValue,
-    AbsoluteSensorRangeValue,
     SensorDirectionValue,
 )
 
@@ -17,17 +16,15 @@ from phoenix6.signals import (
 class MyRobot(MagicRobot):
     scribe: components.Scribe
     accelerometer: components.RoboRioAccelerometer
-    gyro: components.NavX2
+    #gyro: components.NavX2
     led: components.LED
     limelight: components.Limelight
     main_controller: components.XboxController
-    '''
     front_left_swerve_module: components.SwerveModule
     front_right_swerve_module: components.SwerveModule
     rear_left_swerve_module: components.SwerveModule
     rear_right_swerve_module: components.SwerveModule
-    drivetrain: components.SwerveDrive
-    #'''
+    #drivetrain: components.SwerveDrive
 
     def createObjects(self):
         """Create motors and stuff here"""
@@ -91,8 +88,9 @@ class MyRobot(MagicRobot):
             constants.CAN_IDS["rear_right_cancoder"],
             constants.CANCODER_OFFSETS["rear_right"],
         )
+        
         # Gyro stuff here
-        self.drivetrain_gyro = self.gyro
+        #self.drivetrain_gyro = self.gyro
 
     def teleopInit(self):
         """Called when teleop starts; optional"""
@@ -112,9 +110,9 @@ class MyRobot(MagicRobot):
     def _create_can_coder(self, cancoder_id: int, offset: float) -> CANcoder:
         cancoder = CANcoder(cancoder_id)
         cc_cfg = CANcoderConfiguration()
-        cc_cfg.magnet_sensor.absolute_sensor_range = (
-            AbsoluteSensorRangeValue.SIGNED_PLUS_MINUS_HALF
-        )
+        #cc_cfg.magnet_sensor.absolute_sensor_range = (
+        #    AbsoluteSensorRangeValue.SIGNED_PLUS_MINUS_HALF
+        #)
         cc_cfg.magnet_sensor.sensor_direction = (
             SensorDirectionValue.COUNTER_CLOCKWISE_POSITIVE
         )
@@ -144,7 +142,7 @@ class MyRobot(MagicRobot):
         # Fuse the CANcoder so the TalonFX uses absolute position directly
         steer_cfg.feedback.feedback_remote_sensor_id = cancoder_id
         steer_cfg.feedback.feedback_sensor_source = (
-            FeedbackSensorSourceValue.FUSED_CA_NCODER
+            FeedbackSensorSourceValue.FUSED_CANCODER
         )
         steer_cfg.feedback.sensor_to_mechanism_ratio = 1.0
         steer_cfg.feedback.rotor_to_sensor_ratio = constants.STEER_GEAR_RATIO

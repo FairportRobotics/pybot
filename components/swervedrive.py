@@ -1,10 +1,3 @@
-"""
-swerve_drive.py - MagicBot Component for a full 4-module swerve drivetrain.
-
-Depends on four SwerveModule components injected by robot.py.
-Uses a NavX (or Pigeon 2) for field-relative driving and WPILib kinematics.
-"""
-
 import constants
 import math
 import wpilib
@@ -16,47 +9,22 @@ from wpimath.kinematics import (
     ChassisSpeeds,
 )
 from components.swervemodule import SwerveModule
-from components.gyro import NavX2
+#from components.gyro import NavX2
 
+class PseudoGyro:
+    def heading(self):
+        return Rotation2d.fromDegrees(0.0)
+
+    def reset(self):
+        pass
 
 class SwerveDrive:
-    """
-    MagicBot component that coordinates four SwerveModule components
-    to provide field-relative or robot-relative swerve driving.
-
-    Inject the four SwerveModule components plus the gyro in robot.py.
-
-    Example robot.py injection:
-        # Modules (positions relative to robot centre, in metres)
-        self.front_left: SwerveModule
-        self.front_right: SwerveModule
-        self.rear_left: SwerveModule
-        self.rear_right: SwerveModule
-
-        self.swerve_drive: SwerveDrive
-
-        # CAN IDs  (drive, steer, cancoder, offset_rotations)
-        self.front_left_drive_id   = 1;  self.front_left_steer_id   = 2
-        self.front_left_cancoder_id = 3; self.front_left_cancoder_offset = 0.0
-
-        self.front_right_drive_id   = 4; self.front_right_steer_id   = 5
-        self.front_right_cancoder_id = 6; self.front_right_cancoder_offset = 0.0
-
-        self.rear_left_drive_id   = 7;   self.rear_left_steer_id   = 8
-        self.rear_left_cancoder_id = 9;  self.rear_left_cancoder_offset = 0.0
-
-        self.rear_right_drive_id   = 10; self.rear_right_steer_id   = 11
-        self.rear_right_cancoder_id = 12; self.rear_right_cancoder_offset = 0.0
-
-        self.gyro_id = 13   # Pigeon 2 CAN ID
-    """
-
     # --- Injected sub-components ---
-    front_left: SwerveModule
-    front_right: SwerveModule
-    rear_left: SwerveModule
-    rear_right: SwerveModule
-    gyro: NavX2
+    #front_left: SwerveModule
+    #front_right: SwerveModule
+    #rear_left: SwerveModule
+    #rear_right: SwerveModule
+    gyro: PseudoGyro
 
     # --- Tunables ---
     max_speed_mps = tunable(4.5)  # m/s
