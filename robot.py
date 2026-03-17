@@ -16,7 +16,7 @@ from phoenix6.signals import (
 class MyRobot(MagicRobot):
     scribe: components.Scribe
     accelerometer: components.RoboRioAccelerometer
-    #gyro: components.NavX2
+    gyro: components.PseudoGyro
     led: components.LED
     limelight: components.Limelight
     main_controller: components.XboxController
@@ -24,7 +24,7 @@ class MyRobot(MagicRobot):
     front_right_swerve_module: components.SwerveModule
     rear_left_swerve_module: components.SwerveModule
     rear_right_swerve_module: components.SwerveModule
-    #drivetrain: components.SwerveDrive
+    drivetrain: components.SwerveDrive
 
     def createObjects(self):
         """Create motors and stuff here"""

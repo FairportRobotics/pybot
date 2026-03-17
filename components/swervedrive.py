@@ -9,21 +9,14 @@ from wpimath.kinematics import (
     ChassisSpeeds,
 )
 from components.swervemodule import SwerveModule
-#from components.gyro import NavX2
-
-class PseudoGyro:
-    def heading(self):
-        return Rotation2d.fromDegrees(0.0)
-
-    def reset(self):
-        pass
+from components.gyro import PseudoGyro
 
 class SwerveDrive:
     # --- Injected sub-components ---
-    #front_left: SwerveModule
-    #front_right: SwerveModule
-    #rear_left: SwerveModule
-    #rear_right: SwerveModule
+    front_left_swerve_module: SwerveModule
+    front_right_swerve_module: SwerveModule
+    rear_left_swerve_module: SwerveModule
+    rear_right_swerve_module: SwerveModule
     gyro: PseudoGyro
 
     # --- Tunables ---
@@ -47,10 +40,10 @@ class SwerveDrive:
             self.kinematics,
             self.get_heading(),
             (
-                self.front_left.get_position(),
-                self.front_right.get_position(),
-                self.rear_left.get_position(),
-                self.rear_right.get_position(),
+                self.front_left_swerve_module.get_position(),
+                self.front_right_swerve_module.get_position(),
+                self.rear_left_swerve_module.get_position(),
+                self.rear_right_swerve_module.get_position(),
             ),
             Pose2d(),
         )
@@ -100,10 +93,10 @@ class SwerveDrive:
         self.odometry.resetPosition(
             self.get_heading(),
             (
-                self.front_left.get_position(),
-                self.front_right.get_position(),
-                self.rear_left.get_position(),
-                self.rear_right.get_position(),
+                self.front_left_swerve_module.get_position(),
+                self.front_right_swerve_module.get_position(),
+                self.rear_left_swerve_module.get_position(),
+                self.rear_right_swerve_module.get_position(),
             ),
             pose,
         )
@@ -137,19 +130,19 @@ class SwerveDrive:
         )
 
         fl, fr, rl, rr = module_states
-        self.front_left.set_desired_state(fl)
-        self.front_right.set_desired_state(fr)
-        self.rear_left.set_desired_state(rl)
-        self.rear_right.set_desired_state(rr)
+        self.front_left_swerve_module.set_desired_state(fl)
+        self.front_right_swerve_module.set_desired_state(fr)
+        self.rear_left_swerve_module.set_desired_state(rl)
+        self.rear_right_swerve_module.set_desired_state(rr)
 
         # Update odometry
         self.odometry.update(
             self.get_heading(),
             (
-                self.front_left.get_position(),
-                self.front_right.get_position(),
-                self.rear_left.get_position(),
-                self.rear_right.get_position(),
+                self.front_left_swerve_module.get_position(),
+                self.front_right_swerve_module.get_position(),
+                self.rear_left_swerve_module.get_position(),
+                self.rear_right_swerve_module.get_position(),
             ),
         )
 
@@ -166,4 +159,4 @@ class SwerveDrive:
 
     def _get_gyro_rotation(self) -> Rotation2d:
         """Return gyro yaw as a Rotation2d (negated for CCW-positive convention)."""
-        return Rotation2d.fromDegrees(-self._gyro.get_yaw().value)
+        return Rotation2d.fromDegrees(-self.gyro.get_yaw().value)
