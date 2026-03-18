@@ -1,11 +1,12 @@
 from wpilib import AddressableLED, SmartDashboard
+import random
 
 
 class LED:
     pwm_port: int
     length: int
-    default_color: str = "off"
-    default_mode: str = "off"
+    default_color: str = "red"
+    default_mode: str = "sparkle"
 
     def execute(self):
         # Get the mode from the Network Tables
@@ -19,6 +20,8 @@ class LED:
             self.knightrider(self.colors[led_color])
         elif led_mode == "pulse":
             self.pulse(self.colors[led_color])
+        elif led_mode == "sparkle":
+            self.sparkle(self.colors[led_color])
         elif led_mode == "solid" and led_color in self.colors:
             self.set_RGB(self.colors[led_color])
         else:
@@ -124,6 +127,19 @@ class LED:
 
         # Check bounds
         self.rainbow_first_pixel_hue %= 180
+
+        self._update_leds()
+
+    def sparkle(self, RGB, chance=0.1):
+        """
+        Create a sparkling effect for a color
+        """
+        r, g, b = RGB
+        for i in range(self.length):
+            if random.random() < chance:
+                self.buffer[i].setRGB(r, g, b)
+            else:
+                self.buffer[i].setRGB(0, 0, 0)
 
         self._update_leds()
 
