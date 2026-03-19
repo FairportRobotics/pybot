@@ -12,7 +12,7 @@ class RoboRioAccelerometer:
         self.y_accel = 0.0
         self.z_accel = 0.0
         self.last_time = time.monotonic()
-        self.G_TO_MPS2 = 9.81
+        self.G_TO_MPS2 = 9.80665 #9.81
         self.velocity = {"x": 0.0, "y": 0.0, "z": 0.0}
         self.distance = {"x": 0.0, "y": 0.0, "z": 0.0}
 

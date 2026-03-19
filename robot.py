@@ -25,14 +25,16 @@ class MyRobot(MagicRobot):
 
     def teleopInit(self):
         """Called when teleop starts; optional"""
-        pass
+        self.accelerometer.reset()
+        self.gyro.reset()
 
     def teleopPeriodic(self):
         self.main_controller.capture_button_presses()
         left_x, left_y, right_x, right_y = self.main_controller.get_joysticks()
 
     def disabledInit(self):
-        pass
+        self.accelerometer.reset()
+        self.gyro.reset()
 
     def disabledPeriodic(self):
         self.led.turn_off()

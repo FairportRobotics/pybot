@@ -5,8 +5,8 @@ import random
 class LED:
     pwm_port: int
     length: int
-    default_color: str = "red"
-    default_mode: str = "sparkle"
+    default_color: str = "off"
+    default_mode: str = "off"
 
     def execute(self):
         # Get the mode from the Network Tables
