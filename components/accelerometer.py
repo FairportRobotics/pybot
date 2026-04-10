@@ -20,6 +20,9 @@ class RoboRioAccelerometer:
         self.roll = 0.0
         self.yaw = 0.0
         self.quaternion = {"w": 0.0, "x": 0.0, "y": 0.0, "z": 0.0}
+        self.magnitude = 0.0
+        self.stationary = True
+        self.stationary_threshold = 1.05
 
     def execute(self):
         now = time.monotonic()
@@ -34,6 +37,9 @@ class RoboRioAccelerometer:
             self.x_accel = self.accelerometer.getX()
             self.y_accel = self.accelerometer.getY()
         self.z_accel = self.accelerometer.getZ()
+
+        self.magnitude = math.sqrt(self.x_accel**2 + self.y_accel**2 + self.z_accel**2)
+        self.stationary = self.magnitude < self.stationary_threshold
 
         # Convert from G to M/Second squared
         acceleration = {
@@ -141,3 +147,11 @@ class RoboRioAccelerometer:
     @feedback
     def quaternion_z(self):
         return self.quaternion["z"]
+
+    @feedback(key="magnitude")
+    def the_magnitude(self):
+        return self.magnitude
+
+    @feedback
+    def is_stationary(self):
+        return self.stationary
