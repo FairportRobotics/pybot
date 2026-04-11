@@ -155,7 +155,3 @@ class RoboRioAccelerometer:
     @feedback(key="magnitude")
     def the_magnitude(self):
         return self.magnitude
-
-    @feedback
-    def is_stationary(self):
-        return self.stationary

@@ -49,3 +49,12 @@ class MyRobot(MagicRobot):
     @feedback
     def deploy_date(self):
         return self.deploy_data.get("deploy-date", "Unknown")
+
+    @feedback
+    def is_stationary(self):
+        return self.accelerometer.stationary
+
+    @feedback
+    def current_state(self):
+        # return self.state_machine.current_state
+        return "N/A"
