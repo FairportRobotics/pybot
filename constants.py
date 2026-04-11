@@ -1,12 +1,6 @@
-# Controller Settings
+# Should we correct for the controller deadband?
+CONTROLLER_CORRECT_FOR_DEADBAND = True
+# The deadband for the controller joysticks
+CONTROLLER_DEADBAND = 0.3
+# The port the controller is connected to
 CONTROLLER_PORT = 0
-JOYSTICK_LEFT_X = 0
-JOYSTICK_LEFT_Y = 1
-JOYSTICK_RIGHT_X = 4
-JOYSTICK_RIGHT_Y = 5
-
-# Motor Settings
-LEFT_FRONT_MOTOR = 0
-LEFT_BACK_MOTOR = 1
-RIGHT_FRONT_MOTOR = 2
-RIGHT_BACK_MOTOR = 3
