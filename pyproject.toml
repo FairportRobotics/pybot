@@ -19,7 +19,7 @@ robotpy_extras = [
     # "pathplannerlib",
     # "phoenix5",
     # "phoenix6",
-    # "rev",
+    "rev",
     # "romi",
     # "sim",
     # "xrp",
@@ -27,5 +27,5 @@ robotpy_extras = [
 
 # Other pip packages to install
 requires = [
-    "robotpy-limelight@git+https://github.com/FRC703/Robotpy-Limelight"
+    "robotpy-limelight@git+https://github.com/FRC703/Robotpy-Limelight",
 ]
