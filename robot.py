@@ -8,7 +8,17 @@ class MyRobot(MagicRobot):
     accelerometer: components.RoboRioAccelerometer
     controller: components.XboxController
 
+    @property
+    def current_state(self):
+        return self._current_state
+
+    @current_state.setter
+    def current_state(self, new_state: str):
+        self._current_state = new_state
+
     def createObjects(self):
+        self.current_state = "Initializing"
+
         """Create motors and stuff here"""
         # Controller stuff here
         self.controller_correct_for_deadband = constants.CONTROLLER_CORRECT_FOR_DEADBAND
@@ -21,7 +31,11 @@ class MyRobot(MagicRobot):
         if self.deploy_data is None:
             self.deploy_data = {}
 
+    def autonomous(self):
+        self.current_state = "Starting autonomous routine"
+
     def teleopInit(self):
+        self.current_state = "Controlled by humans"
         self.accelerometer.reset()
 
     def teleopPeriodic(self):
@@ -29,6 +43,7 @@ class MyRobot(MagicRobot):
         left_x, left_y, right_x, right_y = self.controller.get_joysticks()
 
     def disabledInit(self):
+        self.current_state = "Awaiting your command"
         self.accelerometer.reset()
 
     def disabledPeriodic(self):
@@ -54,7 +69,6 @@ class MyRobot(MagicRobot):
     def is_stationary(self):
         return self.accelerometer.stationary
 
-    @feedback
-    def current_state(self):
-        # return self.state_machine.current_state
-        return "N/A"
+    @feedback(key="current_state")
+    def get_current_state(self):
+        return self.current_state
