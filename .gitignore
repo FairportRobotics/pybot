@@ -226,5 +226,7 @@ cython_debug/
 # PyPI configuration file
 .pypirc
     
+.ruff_cache/
+
 .wpilib
 simgui*.json
