@@ -20,3 +20,5 @@ class TankDrive:
     # Current limit for drivetrain motors. 60A is a reasonable maximum to reduce
     # likelihood of tripping breakers or damaging CIM motors
     DRIVE_MOTOR_CURRENT_LIMIT = 60
+    CAN_TIMEOUT_MS = 250
+    VOLTAGE_COMPENSATION = 12
