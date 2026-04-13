@@ -4,11 +4,6 @@ from magicbot import MagicRobot
 
 
 class MyRobot(MagicRobot):
-    scribe: components.Scribe
-    accelerometer: components.RoboRioAccelerometer
-    gyro: components.NavX2
-    led: components.LED
-    limelight: components.Limelight
     main_controller: components.XboxController
 
     def createObjects(self):
@@ -19,22 +14,17 @@ class MyRobot(MagicRobot):
         )
         self.main_controller_deadband = constants.CONTROLLER_DEADBAND
         self.main_controller_port = constants.CONTROLLER_PORT
-        # LED stuff here
-        self.led_length = constants.LED_LENGTH
-        self.led_pwm_port = constants.LED_PWM_PORT
 
     def teleopInit(self):
         """Called when teleop starts; optional"""
-        self.accelerometer.reset()
-        self.gyro.reset()
+        pass
 
     def teleopPeriodic(self):
         self.main_controller.capture_button_presses()
         left_x, left_y, right_x, right_y = self.main_controller.get_joysticks()
 
     def disabledInit(self):
-        self.accelerometer.reset()
-        self.gyro.reset()
+        pass
 
     def disabledPeriodic(self):
-        self.led.turn_off()
+        pass
