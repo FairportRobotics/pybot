@@ -1,9 +1,13 @@
 import constants
 from wpilib.drive import DifferentialDrive
 import rev
+from magicbot import will_reset_to
 
 
 class TankDrive:
+    _speed = will_reset_to(0.0)
+    _rotation = will_reset_to(0.0)
+
     def setup(self):
         self.left_leader = rev.SparkMax(
             constants.CAN_IDs.LEFT_MOTOR, rev.SparkLowLevel.MotorType.kBrushed
@@ -63,7 +67,11 @@ class TankDrive:
         )
 
         # set up differential drive class
-        self.drive = DifferentialDrive(self.left_leader, self.right_leader)
+        self._drive = DifferentialDrive(self.left_leader, self.right_leader)
 
     def execute(self):
-        pass
+        self._drive.arcadeDrive(self._speed, self._rotation)
+
+    def drive(self, speed: float, rotation: float) -> None:
+        self._speed = speed
+        self._rotation = rotation
