@@ -13,7 +13,7 @@ class TankDrive:
     motors: dict[str, phoenix5.WPI_TalonSRX]
 
     def setup(self) -> None:
-        
+
         self._pose = Pose2d(0, 0, Rotation2d.fromDegrees(0))
         self._odometry = DifferentialDriveOdometry(
             self._pose.rotation(), 0, 0, self._pose
@@ -31,7 +31,7 @@ class TankDrive:
         if "left_follower" in self.motors:
             self.left_follower = self.motors["left_follower"]
             self.left_follower.follow(self.left_motor)
-        
+
         # set up differential drive class
         self._drive = DifferentialDrive(self.left_motor, self.right_motor)
 

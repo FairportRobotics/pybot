@@ -14,10 +14,14 @@ class MyRobot(MagicRobot):
         # Motors
         self.drivetrain_motors = {
             "left_motor": phoenix5.WPI_TalonSRX(constants.CAN_IDs.LEFT_MOTOR),
-            "left_follower": phoenix5.WPI_TalonSRX(constants.CAN_IDs.LEFT_FOLLOWER_MOTOR),
+            "left_follower": phoenix5.WPI_TalonSRX(
+                constants.CAN_IDs.LEFT_FOLLOWER_MOTOR
+            ),
             "right_motor": phoenix5.WPI_TalonSRX(constants.CAN_IDs.RIGHT_MOTOR),
-            "right_follower": phoenix5.WPI_TalonSRX(constants.CAN_IDs.RIGHT_FOLLOWER_MOTOR),
-        }        
+            "right_follower": phoenix5.WPI_TalonSRX(
+                constants.CAN_IDs.RIGHT_FOLLOWER_MOTOR
+            ),
+        }
 
         # Controller stuff here
         self.controller_correct_for_deadband = constants.Controller.CORRECT_FOR_DEADBAND
