@@ -2,6 +2,7 @@ import constants
 from wpilib.drive import DifferentialDrive
 from wpimath.geometry import Pose2d, Rotation2d
 from wpimath.kinematics import DifferentialDriveOdometry
+from wpimath.units import inchesToMeters
 import phoenix5
 from magicbot import will_reset_to, feedback
 # import rev
@@ -71,3 +72,32 @@ class TankDrive:
 
     def odometry(self) -> DifferentialDriveOdometry:
         return self._odometry
+    
+    def _sensor_units_per_100ms_to_mps(self, sensor_velocity: float) -> float:
+        """Convert TalonSRX native velocity units to meters per second.
+        
+        TalonSRX reports velocity in sensor units per 100ms.
+        """
+        rotations_per_100ms = sensor_velocity / constants.Robot.ENCODER_TICKS_PER_ROTATION
+        rotations_per_second = rotations_per_100ms * 10
+        wheel_rotations_per_second = rotations_per_second / constants.Robot.GEAR_RATIO
+        return wheel_rotations_per_second * inchesToMeters(constants.Robot.WHEEL_RADIUS_IN_INCHES)
+
+    @feedback
+    def get_left_velocity(self) -> float:
+        """Left drivetrain velocity in meters per second."""
+        return self._sensor_units_per_100ms_to_mps(
+            self.left_motor.getSelectedSensorVelocity()
+        )
+
+    @feedback
+    def get_right_velocity(self) -> float:
+        """Right drivetrain velocity in meters per second."""
+        return self._sensor_units_per_100ms_to_mps(
+            self.right_motor.getSelectedSensorVelocity()
+        )
+
+    @feedback
+    def get_average_velocity(self) -> float:
+        """Average drivetrain velocity in meters per second (positive = forward)."""
+        return (self.get_left_velocity() + self.get_right_velocity()) / 2.0
