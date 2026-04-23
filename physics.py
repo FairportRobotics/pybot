@@ -12,11 +12,9 @@ class PhysicsEngine:
 
         # 1. Define the Drivetrain Model
         # Identify system constants (kV, kA) or use a standard motor/gearbox combo
-        self.system = plant.LinearSystemId.identifyDrivetrainSystem(
-            4.5, 0.293, 3.0, 0.3
-        )
-
-        self.system = plant.LinearSystemId.drivetrainVelocitySystem(
+        self.plant = plant.LinearSystemId.identifyDrivetrainSystem(4.5, 0.293, 3.0, 0.3)
+        """
+        self.plant = plant.LinearSystemId.drivetrainVelocitySystem(
             plant.DCMotor.CIM(2),  # 2 CIMs per side
             constants.Robot.MASS_IN_KG,  # robot mass in kg
             inchesToMeters(constants.Robot.WHEEL_RADIUS_IN_INCHES),  # wheel radius
@@ -26,9 +24,9 @@ class PhysicsEngine:
             constants.Robot.GEAR_RATIO,  # gear ratio
             constants.Robot.MOMENT_OF_INERTIA,  # kg·m²
         )
-
+        """
         self.simulated_drivetrain = wpisim.DifferentialDrivetrainSim(
-            self.system,
+            self.plant,
             inchesToMeters(
                 constants.Robot.DISTANCE_BETWEEN_WHEELS_IN_INCHES
             ),  # Track width (meters)
@@ -40,18 +38,18 @@ class PhysicsEngine:
         )
 
         # 2. Get Simulation Handles from your Robot's Talon SRX objects
-        self.l_talon_sim = robot.drivetrain.left_motor.getSimCollection()
-        self.r_talon_sim = robot.drivetrain.right_motor.getSimCollection()
+        self.simulated_left_motor = robot.drivetrain.left_motor.getSimCollection()
+        self.simulated_right_motor = robot.drivetrain.right_motor.getSimCollection()
 
-    def update_sim(self, now: float, tm_diff: float) -> None:
+    def update_sim(self, now: float, time_difference: float) -> None:
         # 3. Pull voltages from the motor controllers and apply to physics
         self.simulated_drivetrain.setInputs(
-            self.l_talon_sim.getMotorOutputLeadVoltage(),
-            self.r_talon_sim.getMotorOutputLeadVoltage(),
+            self.simulated_left_motor.getMotorOutputLeadVoltage(),
+            self.simulated_right_motor.getMotorOutputLeadVoltage(),
         )
 
         # 4. Advance the physics world
-        self.simulated_drivetrain.update(tm_diff)
+        self.simulated_drivetrain.update(time_difference)
 
         # 5. Convert distance (meters) to Talon ticks (4096 per rotation)
         # Formula: (Distance / Wheel Circumference) * Gear Ratio * 4096
@@ -64,17 +62,17 @@ class PhysicsEngine:
         )
 
         # Update Talon Positions (Raw Ticks)
-        self.l_talon_sim.setQuadratureRawPosition(
-            int(self.simulated_drivetrain.getLeftPosition())# * counts_per_m)
+        self.simulated_left_motor.setQuadratureRawPosition(
+            int(self.simulated_drivetrain.getLeftPosition())  # * counts_per_m)
         )
-        self.r_talon_sim.setQuadratureRawPosition(
-            int(self.simulated_drivetrain.getRightPosition())# * counts_per_m)
+        self.simulated_right_motor.setQuadratureRawPosition(
+            int(self.simulated_drivetrain.getRightPosition())  # * counts_per_m)
         )
 
         # Update Talon Velocities (Ticks per 100ms)
-        self.l_talon_sim.setQuadratureVelocity(
+        self.simulated_left_motor.setQuadratureVelocity(
             int(self.simulated_drivetrain.getLeftVelocity() * counts_per_m / 10)
         )
-        self.r_talon_sim.setQuadratureVelocity(
+        self.simulated_right_motor.setQuadratureVelocity(
             int(self.simulated_drivetrain.getRightVelocity() * counts_per_m / 10)
         )
