@@ -3,13 +3,12 @@ import constants
 import phoenix5
 from wpimath.geometry import Pose2d
 from magicbot import MagicRobot, feedback
-import navx
 
 
 class MyRobot(MagicRobot):
     controller: components.XboxController
+    gyro: components.NavX
     drivetrain: components.TankDrive
-    gyro: navx.AHRS
 
     def createObjects(self):
         """Create motors and stuff here"""
@@ -24,10 +23,6 @@ class MyRobot(MagicRobot):
                 constants.CAN_IDs.RIGHT_FOLLOWER_MOTOR
             ),
         }
-        # Gyro
-        self.drivetrain_gyro = self.gyro = (
-            navx.AHRS.create_spi()
-        )  # or create_i2c(), create_uart(), etc. depending on your connection method
 
         # Controller stuff here
         self.controller_correct_for_deadband = constants.Controller.CORRECT_FOR_DEADBAND

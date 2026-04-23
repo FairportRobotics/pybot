@@ -5,7 +5,8 @@ from wpimath.geometry import Pose2d, Rotation2d
 from wpimath.kinematics import DifferentialDriveOdometry
 from wpimath.units import inchesToMeters
 import phoenix5
-import navx
+
+# import navx
 from magicbot import will_reset_to, feedback
 # from phoenix5.sensors import WPI_PigeonIMU
 # import rev
@@ -15,7 +16,7 @@ class TankDrive:
     _speed = will_reset_to(0.0)
     _rotation = will_reset_to(0.0)
     motors: dict[str, phoenix5.WPI_TalonSRX]
-    gyro: navx.AHRS
+    gyro: components.NavX
 
     def setup(self) -> None:
         self._pose = Pose2d(0, 0, Rotation2d.fromDegrees(0))
@@ -45,9 +46,8 @@ class TankDrive:
         self.right_motor.setSelectedSensorPosition(0)
 
     def execute(self) -> None:
-        gyro_angle = Rotation2d.fromDegrees(-self.gyro.getAngle())
         self._odometry.update(
-            gyro_angle,
+            self.gyro.get_rotation2d(),
             self.left_motor.getSelectedSensorPosition(),
             self.right_motor.getSelectedSensorPosition(),
         )
