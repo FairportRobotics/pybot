@@ -5,6 +5,7 @@ from wpimath.geometry import Pose2d, Rotation2d
 from wpimath.kinematics import DifferentialDriveOdometry
 from wpimath.units import inchesToMeters
 import phoenix5
+import math
 
 # import navx
 from magicbot import will_reset_to, feedback
@@ -82,6 +83,7 @@ class TankDrive:
 
         TalonSRX reports velocity in sensor units per 100ms.
         """
+        ''''
         rotations_per_100ms = (
             sensor_velocity / constants.Robot.ENCODER_TICKS_PER_ROTATION
         )
@@ -89,6 +91,21 @@ class TankDrive:
         wheel_rotations_per_second = rotations_per_second / constants.Robot.GEAR_RATIO
         return wheel_rotations_per_second * inchesToMeters(
             constants.Robot.WHEEL_RADIUS_IN_INCHES
+        )
+        '''
+        # Formula ((velocity in u/100ms * 10) * (diameter in m * pi)) / units per rotation * gear ratio
+        return (
+            (
+                (sensor_velocity * 10)  # convert to u/s
+                * 
+                (2 * math.pi * inchesToMeters(constants.Robot.WHEEL_RADIUS_IN_INCHES))  # wheel circumference in m
+            )
+            / 
+            (
+                constants.Robot.ENCODER_TICKS_PER_ROTATION  # convert to rotations/s
+                *
+                constants.Robot.GEAR_RATIO  # convert to wheel rotations/s
+            )
         )
 
     @feedback
