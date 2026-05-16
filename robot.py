@@ -1,40 +1,45 @@
 import components
 import constants
-from magicbot import MagicRobot
+from magicbot import MagicRobot, feedback
+from phoenix5 import WPI_TalonSRX
 
 
 class MyRobot(MagicRobot):
-    scribe: components.Scribe
-    accelerometer: components.RoboRioAccelerometer
-    gyro: components.NavX2
-    led: components.LED
-    limelight: components.Limelight
-    main_controller: components.XboxController
+    controller: components.XboxController
+    drivetrain: components.DriveTrain
+    roller: components.Roller
 
     def createObjects(self):
-        """Create motors and stuff here"""
-        # Controller stuff here
-        self.main_controller_correct_for_deadband = (
-            constants.CONTROLLER_CORRECT_FOR_DEADBAND
-        )
-        self.main_controller_deadband = constants.CONTROLLER_DEADBAND
-        self.main_controller_port = constants.CONTROLLER_PORT
-        # LED stuff here
-        self.led_length = constants.LED_LENGTH
-        self.led_pwm_port = constants.LED_PWM_PORT
+        self.name = constants.Robot.NAME
+        self.controller_port = constants.CONTROLLER_PORT
 
-    def teleopInit(self):
-        """Called when teleop starts; optional"""
-        self.accelerometer.reset()
-        self.gyro.reset()
+        # create motors for the drivetrain
+        self.drivetrain_left_leader = WPI_TalonSRX(
+            constants.CanBusIds.LEFT_LEADER_MOTOR
+        )
+        self.drivetrain_left_follower = WPI_TalonSRX(
+            constants.CanBusIds.LEFT_FOLLOWER_MOTOR
+        )
+        self.drivetrain_right_leader = WPI_TalonSRX(
+            constants.CanBusIds.RIGHT_LEADER_MOTOR
+        )
+        self.drivetrain_right_follower = WPI_TalonSRX(
+            constants.CanBusIds.RIGHT_FOLLOWER_MOTOR
+        )
+        self.roller_motor = WPI_TalonSRX(constants.CanBusIds.ROLLER_MOTOR)
 
     def teleopPeriodic(self):
-        self.main_controller.capture_button_presses()
-        left_x, left_y, right_x, right_y = self.main_controller.get_joysticks()
+        # =============================================================
+        # JOYSTICK HANDLING
+        # =============================================================
+        if self.controller.b_button_pressed():
+            self.roller.speed = -self.controller.left_y
+        else:
+            self.roller.speed = 0
+            # Control the drivetrain based on the controller input
+            self.drivetrain.speed = -self.controller.left_y
+            self.drivetrain.rotation = -self.controller.right_x
 
-    def disabledInit(self):
-        self.accelerometer.reset()
-        self.gyro.reset()
-
-    def disabledPeriodic(self):
-        self.led.turn_off()
+    @feedback(key="name")
+    def get_name(self) -> str:
+        return self.name

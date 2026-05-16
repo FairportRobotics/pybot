@@ -1,18 +1,5 @@
-from .accelerometer import RoboRioAccelerometer
-from .controller import PlayStationController, XboxController
-from .gyro import NavX2
-from .led import LED
-from .scribe import Scribe
-from .tankdrive import TankDrive
-from .vision import Limelight
+from .controller import XboxController
+from .drivetrain import DriveTrain
+from .roller import Roller
 
-__all__ = [
-    "LED",
-    "Limelight",
-    "NavX2",
-    "PlayStationController",
-    "RoboRioAccelerometer",
-    "Scribe",
-    "TankDrive",
-    "XboxController",
-]
+__all__ = ["DriveTrain", "Roller", "XboxController"]

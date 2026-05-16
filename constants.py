@@ -1,13 +1,13 @@
-from wpilib import RobotBase
-
-ROBOT_MODE = "REAL" if RobotBase.isReal() else "SIM"
-
-# Should we correct for the controller deadband?
-CONTROLLER_CORRECT_FOR_DEADBAND = True
-# The deadband for the controller joysticks
-CONTROLLER_DEADBAND = 0.3
-# The port the controller is connected to
 CONTROLLER_PORT = 0
 
-LED_LENGTH = 10
-LED_PWM_PORT = 0
+
+class CanBusIds:
+    LEFT_LEADER_MOTOR = 1
+    LEFT_FOLLOWER_MOTOR = 2
+    RIGHT_LEADER_MOTOR = 3
+    RIGHT_FOLLOWER_MOTOR = 4
+    ROLLER_MOTOR = 5
+
+
+class Robot:
+    NAME = "KitBot"
