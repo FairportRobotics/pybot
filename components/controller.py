@@ -9,6 +9,7 @@ class XboxController:
     right_y: float = 0.0
     correct_for_deadband: bool = True
     deadband: float = 0.1
+    invert_joysticks: bool = True
 
     def setup(self) -> None:
         """
@@ -318,10 +319,12 @@ class XboxController:
         :param raw_value: The raw joystick value.
         :return: The corrected joystick value.
         """
+        sign = -1 if self.invert_joysticks else 1
+
         if not self.correct_for_deadband:
-            return raw_value
+            return sign * raw_value
         if abs(raw_value) < self.deadband:
             return 0.0
-        return (raw_value / abs(raw_value)) * (
+        return sign * ((raw_value / abs(raw_value)) * (
             (abs(raw_value) - self.deadband) / (1 - self.deadband)
-        )
+        ))

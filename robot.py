@@ -33,12 +33,12 @@ class MyRobot(MagicRobot):
         # JOYSTICK HANDLING
         # =============================================================
         if self.controller.b_button_pressed():
-            self.roller.speed = -self.controller.left_y
+            self.roller.speed = self.controller.left_y
         else:
             self.roller.speed = 0
             # Control the drivetrain based on the controller input
-            self.drivetrain.speed = -self.controller.left_y
-            self.drivetrain.rotation = -self.controller.right_x
+            self.drivetrain.speed = self.controller.left_y
+            self.drivetrain.rotation = self.controller.right_x
 
     @feedback(key="name")
     def get_name(self) -> str:
