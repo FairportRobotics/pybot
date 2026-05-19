@@ -8,7 +8,7 @@ class MyRobot(MagicRobot):
     accelerometer: components.RoboRioAccelerometer
     gyro: components.NavX2
     led: components.LED
-    limelight: components.Limelight
+    # limelight: components.Limelight
     main_controller: components.XboxController
 
     def createObjects(self):

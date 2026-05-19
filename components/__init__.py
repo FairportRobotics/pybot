@@ -4,11 +4,11 @@ from .gyro import NavX2
 from .led import LED
 from .scribe import Scribe
 from .tankdrive import TankDrive
-from .vision import Limelight
+# from .vision import Limelight
 
 __all__ = [
     "LED",
-    "Limelight",
+    # "Limelight",
     "NavX2",
     "PlayStationController",
     "RoboRioAccelerometer",
