@@ -1,2 +1,3 @@
-LED_LENGTH = 10
-LED_PWM_PORT = 0
+class LED:
+    LENGTH = 10
+    PWM_PORT = 0

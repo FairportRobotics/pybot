@@ -1,24 +1,28 @@
-import components
+from components import LED
 import constants
-import magicbot
+from magicbot import MagicRobot, feedback
+import wpilib
 
-class MyRobot(magicbot.MagicRobot):
-    LED: components.LED
+
+class MyRobot(MagicRobot):
+    led_strip: LED
 
     def createObjects(self) -> None:
-        '''Create motors and stuff here'''
-        self.LED_length = constants.LED_LENGTH
-        self.LED_pwm_port = constants.LED_PWM_PORT
-
-    def teleopInit(self) -> None:
-        '''Called when teleop starts; optional'''
-        pass
+        """Create motors and stuff here"""
+        self.accelerometer = wpilib.BuiltInAccelerometer()
+        self.led_strip_length = constants.LED.LENGTH
+        self.led_strip_pwm_port = constants.LED.PWM_PORT
 
     def teleopPeriodic(self) -> None:
-        self.LED.rainbow()
-
-    def disabledInit(self) -> None:
-        pass
+        self.led_strip.rainbow()
 
     def disabledPeriodic(self) -> None:
-        self.LED.turn_off()
+        self.led_strip.turn_off()
+
+    @feedback
+    def accelerometer_x(self) -> float:
+        return self.accelerometer.getX()
+
+    @feedback
+    def accelerometer_y(self) -> float:
+        return self.accelerometer.getY()
