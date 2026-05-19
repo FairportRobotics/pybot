@@ -52,16 +52,8 @@ class PhysicsEngine:
         self.simulated_drivetrain.update(time_difference)
 
         # 5. Convert distance (meters) to Talon ticks (4096 per rotation)
-        # Formula: (Distance / Wheel Circumference) * Gear Ratio * 4096
-        counts_per_m = (
-            constants.Robot.ENCODER_TICKS_PER_ROTATION  # ticks/motor-rotation
-            * constants.Robot.GEAR_RATIO  # motor-rotations/wheel-rotation
-            / (
-                2 * math.pi * inchesToMeters(constants.Robot.WHEEL_RADIUS_IN_INCHES)
-            )  # wheel-rotations/meter
-        )
 
-        # Update Talon Positions (Raw Ticks)
+        # Update Talon Positions
         self.simulated_left_motor.setQuadratureRawPosition(
             int(self.simulated_drivetrain.getLeftPosition())  # * counts_per_m)
         )
@@ -71,8 +63,8 @@ class PhysicsEngine:
 
         # Update Talon Velocities (Ticks per 100ms)
         self.simulated_left_motor.setQuadratureVelocity(
-            int(self.simulated_drivetrain.getLeftVelocity() * counts_per_m / 10)
+            int(self.simulated_drivetrain.getLeftVelocity())
         )
         self.simulated_right_motor.setQuadratureVelocity(
-            int(self.simulated_drivetrain.getRightVelocity() * counts_per_m / 10)
+            int(self.simulated_drivetrain.getRightVelocity())
         )
