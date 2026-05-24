@@ -228,3 +228,4 @@ cython_debug/
     
 .wpilib
 simgui*.json
+.ruff_cache/
