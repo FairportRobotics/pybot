@@ -1,18 +1,5 @@
-from .accelerometer import RoboRioAccelerometer
-from .controller import PlayStationController, XboxController
-from .gyro import NavX2
-from .led import LED
-from .scribe import Scribe
-from .tankdrive import TankDrive
-# from .vision import Limelight
+"""Robot component sub-package.
 
-__all__ = [
-    "LED",
-    # "Limelight",
-    "NavX2",
-    "PlayStationController",
-    "RoboRioAccelerometer",
-    "Scribe",
-    "TankDrive",
-    "XboxController",
-]
+Each module in this package is a MagicBot component that encapsulates a
+distinct mechanism on the robot (swerve drive, intake, shooter, etc.).
+"""

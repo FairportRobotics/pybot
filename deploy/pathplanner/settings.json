@@ -1,0 +1,15 @@
+{
+  "version": "2025.0",
+  "robot": {
+    "robotLength": 0.8636,
+    "robotWidth": 0.8636,
+    "bumperLength": 0.9144,
+    "bumperWidth": 0.9144
+  },
+  "holonomic": {
+    "maxV": 4.5,
+    "maxAcc": 3.0,
+    "maxAngV": 540,
+    "maxAngAcc": 720
+  }
+}

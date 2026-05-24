@@ -6,26 +6,37 @@
 [tool.robotpy]
 
 # Version of robotpy this project depends on
-robotpy_version = "2025.3.2.2"
+robotpy_version = "2026.2.2"
 
-# Which extra RobotPy components should be installed
+# Which optional robotpy components should be installed?
 # -> equivalent to `pip install robotpy[extra1, ...]
-robotpy_extras = [
-    # "all",
-    # "apriltag",
-    # "commands2",
-    # "cscore",
-    "navx",
-    # "pathplannerlib",
-    # "phoenix5",
-    # "phoenix6",
-    "rev",
-    # "romi",
-    # "sim",
-    # "xrp",
+# NOTE: "phoenix6" is intentionally excluded here.  We use the standalone
+# `phoenix6` pip package (listed in `requires` below), NOT `robotpy-phoenix6`.
+# Including "phoenix6" here would cause `robotpy sim` to load the
+# robotpy-phoenix6 HALSim extension, which conflicts with the standalone
+# package's C-level thread and crashes pyfrc.
+components = []
+
+# Other pip packages to install, such as vendor packages (each element
+# is equivalent to a line in requirements.txt)
+requires = [
+    "magicbot",
+    "phoenix6",
+    "robotpy-apriltag",
+    "robotpy-pathplannerlib",
 ]
 
-# Other pip packages to install
-requires = [
-    #"robotpy-limelight@git+https://github.com/FRC703/Robotpy-Limelight",
-]
+# ---------------------------------------------------------------------------
+# Ruff – fast Python linter & formatter
+# ---------------------------------------------------------------------------
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+
+[tool.ruff.lint]
+# E/W = pycodestyle, F = pyflakes, I = isort, UP = pyupgrade, B = flake8-bugbear
+select = ["E", "W", "F", "I", "UP", "B"]
+ignore = []
+
+[tool.ruff.lint.isort]
+known-first-party = ["constants", "components"]

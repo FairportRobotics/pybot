@@ -1,0 +1,18 @@
+{
+  "version": "2025.0",
+  "information": {
+    "author": "",
+    "season": 2026
+  },
+  "folder": null,
+  "startingPose": {
+    "position": { "x": 1.5, "y": 4.0 },
+    "rotation": 0
+  },
+  "commands": [
+    {
+      "type": "path",
+      "data": { "pathName": "Example Path" }
+    }
+  ]
+}
