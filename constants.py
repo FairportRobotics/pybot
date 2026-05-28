@@ -30,7 +30,7 @@ import math
 # .wpilog file.  On the real robot this goes to /home/lvuser/logs/.
 # In simulation it writes to the current working directory.
 # Set to False to save disk space during development (e.g., unit-test runs).
-LOGGING_ENABLED: bool = True
+LOGGING_ENABLED: bool = False
 
 # ===========================================================================
 # Robot Timing

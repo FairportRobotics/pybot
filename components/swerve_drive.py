@@ -363,10 +363,12 @@ class SwerveDrive:
         for module in self._modules:
             module.stop()
 
+    @feedback
     def get_avg_drive_position_m(self) -> float:
         """Average drive position across all four modules (metres)."""
         return sum(m.get_drive_position_m() for m in self._modules) / len(self._modules)
 
+    @feedback
     def get_avg_drive_velocity_mps(self) -> float:
         """Average drive velocity across all four modules (m/s)."""
         return sum(m.get_drive_velocity_mps() for m in self._modules) / len(self._modules)

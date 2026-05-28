@@ -67,6 +67,7 @@ from wpilib import DriverStation
 
 import constants
 import state_machine as sm
+from components.controller import XboxController
 from components.field_state import FieldState
 from components.intake import Intake
 from components.leds import LEDSubsystem
@@ -75,8 +76,8 @@ from components.mechanism_display import MechanismDisplay
 from components.shooter import Shooter
 from components.swerve_drive import SwerveDrive
 from components.sysid import DrivetrainSysId
-from components.xbox_controller import XboxController
 from genie import GenieRobot
+#from components.xbox_controller import XboxController
 
 
 class MyRobot(GenieRobot):
@@ -111,11 +112,15 @@ class MyRobot(GenieRobot):
     limelight_front_table_name: str = constants.LIMELIGHT_FRONT_NAME
     limelight_rear_table_name: str = constants.LIMELIGHT_REAR_NAME
 
+    driver_controller: XboxController
     # --- MagicBot injection: passed into XboxController.invert_axes ---
     # Set False to disable axis inversion (useful on some controller firmware).
     driver_controller_invert_axes: bool = True
     # --- MagicBot injection: passed into XboxController.port ---
     driver_controller_port: int = constants.DRIVER_CONTROLLER_PORT
+    #operator_controller: XboxController
+    #operator_controller_invert_axes: bool = False
+    #operator_controller_port: int = constants.OPERATOR_CONTROLLER_PORT
 
     # ------------------------------------------------------------------
     # Git version
@@ -166,25 +171,12 @@ class MyRobot(GenieRobot):
     def createObjects(self) -> None:
         """Instantiate any objects not managed by MagicBot injection.
 
-        ``XboxController`` instances are pure input helpers (no ``execute()``
-        loop), so they are created here rather than declared as MagicBot
-        components.
-
         Note: PathPlanner's ``AutoBuilder.configure()`` is called in
         ``robotInit()`` (below), not here.  Components are not yet injected
         when ``createObjects()`` runs, so ``self.swerve_drive`` would not
         exist yet.  ``super().robotInit()`` must finish first.
         """
-        self.driver_controller = XboxController(
-            port=self.driver_controller_port,
-            invert_axes=self.driver_controller_invert_axes,
-        )
-        # Operator controller — handles shooter speed selection and manual overrides.
-        # Disabled by default (port from constants); swap port to -1 to skip.
-        self.operator_controller = XboxController(
-            port=constants.OPERATOR_CONTROLLER_PORT,
-            invert_axes=False,
-        )
+        pass
 
     def robotInit(self) -> None:
         """Full robot initialisation.
@@ -316,49 +308,46 @@ class MyRobot(GenieRobot):
         """
         self._watchdog.reset()  # restart overrun timer each loop
 
-        ctrl = self.driver_controller
-        op = self.operator_controller
-
         # --- Driving ---
         self.swerve_drive.drive(
-            vx=ctrl.vx * constants.TELEOP_MAX_SPEED_MPS,
-            vy=ctrl.vy * constants.TELEOP_MAX_SPEED_MPS,
-            omega=ctrl.omega * constants.TELEOP_MAX_ANGULAR_SPEED_RAD_PER_S,
+            vx=self.driver_controller.left_x * constants.TELEOP_MAX_SPEED_MPS,
+            vy=self.driver_controller.left_y * constants.TELEOP_MAX_SPEED_MPS,
+            omega=self.driver_controller.right_x * constants.TELEOP_MAX_ANGULAR_SPEED_RAD_PER_S,
         )
         self._watchdog.addEpoch("drive")
-
+        '''
         # --- Drivetrain mode toggles ---
-        if ctrl.y_button_pressed:
+        if self.driver_controller.y_button_was_pressed:
             self.swerve_drive.toggle_field_relative()
 
-        if ctrl.x_button_pressed:
+        if self.driver_controller.x_button_was_pressed:
             self.swerve_drive.reset_gyro()
 
         # --- Intake / Shooter (state machine) ---
-        if ctrl.left_trigger > constants.TRIGGER_THRESHOLD:
+        if self.driver_controller.left_trigger_pressed:# > constants.TRIGGER_THRESHOLD:
             self.scoring.request_intake()
-        elif ctrl.left_bumper:
+        elif self.driver_controller.left_bumper_pressed:
             self.intake.eject()
 
-        if ctrl.right_bumper:
+        if self.driver_controller.right_bumper_pressed:
             self.scoring.request_fire()
 
         # Manual shooter spin-up override (right trigger)
-        if ctrl.right_trigger > constants.TRIGGER_THRESHOLD:
+        if self.driver_controller.right_trigger_pressed:# > constants.TRIGGER_THRESHOLD:
             self.shooter.spin_up()
         elif not self.scoring.is_executing:
             self.shooter.stop()
 
         # --- Operator controller — shooter speed presets ---
-        if op.a_button_pressed:
+        if self.driver_controller.a_button_pressed:
             self.shooter.set_speed(constants.SHOOTER_SPEED_SHORT_RPS)
-        elif op.y_button_pressed:
+        elif self.driver_controller.y_button_pressed:
             self.shooter.set_speed(constants.SHOOTER_SPEED_LONG_RPS)
-        elif op.b_button_pressed:
+        elif self.driver_controller.b_button_pressed:
             self.shooter.reset_speed()
-
+        '''
         self._watchdog.addEpoch("controls")
-
+        
     # ------------------------------------------------------------------
     # Test mode — System Identification
     # ------------------------------------------------------------------
@@ -388,15 +377,14 @@ class MyRobot(GenieRobot):
         | X      | Dynamic (step) Forward     |
         | Y      | Dynamic (step) Reverse     |
         """
-        ctrl = self.driver_controller
 
-        if ctrl.a_button:
+        if self.driver_controller.a_button_was_pressed:
             self.sysid.quasistatic_forward()
-        elif ctrl.b_button:
+        elif self.driver_controller.b_button_was_pressed:
             self.sysid.quasistatic_reverse()
-        elif ctrl.x_button:
+        elif self.driver_controller.x_button_was_pressed:
             self.sysid.dynamic_forward()
-        elif ctrl.y_button:
+        elif self.driver_controller.y_button_was_pressed:
             self.sysid.dynamic_reverse()
 
     # ------------------------------------------------------------------
@@ -413,3 +401,17 @@ class MyRobot(GenieRobot):
         correct starting pose while the robot sits on the field.
         """
         pass
+
+    @feedback
+    def pose(self):
+        pose = self.swerve_drive.get_pose()
+        return [
+            pose.translation().X(),
+            pose.translation().Y(),
+            pose.rotation().radians()
+        ]
+
+    @feedback
+    def heading(self):
+        return self.swerve_drive.get_pose().rotation().degrees()
+        
