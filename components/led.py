@@ -39,6 +39,7 @@ class LED:
             "green": (0, 255, 0),
             "blue": (0, 0, 255),
             "purple": (255, 0, 255),
+            "off": (0, 0, 0),
         }
 
         # Set up the LEDs
